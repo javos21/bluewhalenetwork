@@ -1,0 +1,35 @@
+---
+import { faq } from '@/data/site';
+---
+
+<section id="faq" class="section">
+  <div class="container-xl">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+      <!-- Left: heading -->
+      <div class="reveal lg:sticky lg:top-28">
+        <h2 class="text-[2rem] leading-[1.1] sm:text-h3 text-ink">
+          <span class="block">{faq.eyebrowA}</span>
+          <span class="block">{faq.eyebrowB} <span class="text-blue">{faq.highlight}</span></span>
+        </h2>
+        <p class="mt-5 text-body1 text-ink/55 max-w-md">{faq.subheading}</p>
+      </div>
+
+      <!-- Right: accordion -->
+      <div class="reveal card-soft p-3 sm:p-4">
+        {faq.items.map((item, i) => (
+          <details class="faq-item group border-b border-ink/8 last:border-0" open={i === 0}>
+            <summary class="flex items-center justify-between gap-4 cursor-pointer list-none px-4 py-5">
+              <span class="text-body1 font-bold text-ink">{item.q}</span>
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue text-white shrink-0 transition-transform duration-300 group-open:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                  <path fill-rule="evenodd" d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-4 pb-5 -mt-1 text-body1 text-ink/55">{item.a}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

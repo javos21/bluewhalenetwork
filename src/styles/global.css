@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-blue:   #5E78EE;
+  --color-blue-d: #4A63D6;
+  --color-ink:    #0A1236;
+  --color-cloud:  #F6F6F6;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply bg-cloud text-ink font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-sans font-black tracking-tight;
+  }
+}
+
+@layer components {
+  .container-xl {
+    @apply w-full max-w-content mx-auto px-6 sm:px-8;
+  }
+
+  .section {
+    @apply py-20 lg:py-28;
+  }
+
+  /* ── Pill buttons ── */
+  .btn-blue {
+    @apply inline-flex items-center gap-3 bg-blue text-white font-bold text-body1
+           pl-7 pr-2 py-2 rounded-pill
+           transition-all duration-200 hover:bg-blue-dark hover:shadow-pill;
+  }
+  .btn-blue .btn-arrow {
+    @apply flex items-center justify-center w-9 h-9 rounded-full bg-white/20;
+  }
+
+  .btn-white {
+    @apply inline-flex items-center gap-3 bg-white text-ink font-bold text-body1
+           pl-7 pr-2 py-2 rounded-pill
+           transition-all duration-200 hover:shadow-soft;
+  }
+  .btn-white .btn-arrow {
+    @apply flex items-center justify-center w-9 h-9 rounded-full bg-blue text-white;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border border-ink/15 text-ink font-bold text-body1
+           px-6 py-3 rounded-pill
+           transition-all duration-200 hover:border-blue hover:text-blue;
+  }
+
+  /* ── Eyebrow / tag labels ── */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-caption uppercase tracking-[0.15em] text-blue;
+  }
+
+  .tag-pill {
+    @apply inline-flex items-center text-caption uppercase tracking-[0.12em]
+           px-4 py-2 rounded-pill border;
+  }
+
+  /* ── Cards ── */
+  .card-soft {
+    @apply bg-white rounded-card shadow-card;
+  }
+
+  /* ── Circle nav buttons (carousels) ── */
+  .nav-circle {
+    @apply flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Hero load-in animations ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFadeRight {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes heroScaleIn {
+  from { opacity: 0; transform: scale(0.82); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes heroPhotoIn {
+  from { opacity: 0; transform: translateY(44px) scale(1.04); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+.anim { opacity: 0; animation-duration: 0.9s; animation-fill-mode: both;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+.anim-fade-up    { animation-name: heroFadeUp; }
+.anim-fade-right { animation-name: heroFadeRight; }
+.anim-scale      { animation-name: heroScaleIn; animation-duration: 1s; }
+.anim-photo      { animation-name: heroPhotoIn; animation-duration: 1.1s; }
+
+.d1 { animation-delay: 0.10s; }
+.d2 { animation-delay: 0.25s; }
+.d3 { animation-delay: 0.45s; }
+.d4 { animation-delay: 0.65s; }
+.d5 { animation-delay: 0.85s; }
+.d6 { animation-delay: 1.05s; }
+
+.hero-tilt { transition: transform 0.25s ease-out; will-change: transform; }
+.hero-float { animation: heroFloat 6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim { opacity: 1; animation: none; }
+  .hero-float { animation: none; }
+}

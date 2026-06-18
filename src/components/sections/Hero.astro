@@ -1,0 +1,88 @@
+---
+import { hero } from '@/data/site';
+
+const icons: Record<string, string> = {
+  LinkedIn:  'M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.8v2.2h.07c.67-1.2 2.3-2.5 4.73-2.5 5.06 0 6 3.33 6 7.66V24h-5v-7.4c0-1.77-.03-4.04-2.46-4.04-2.46 0-2.84 1.92-2.84 3.9V24h-5V8z',
+  X:         'M18.9 2H22l-7.5 8.6L23 22h-6.9l-5.4-7-6.2 7H1.4l8-9.2L1 2h7l4.9 6.5L18.9 2zm-1.2 18h1.9L6.4 4H4.4l13.3 16z',
+  Instagram: 'M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 1.8.26 2.2.43.6.22 1 .48 1.4.9.42.4.68.8.9 1.4.17.4.37 1 .43 2.2.07 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.26 1.8-.43 2.2-.22.6-.48 1-.9 1.4-.4.42-.8.68-1.4.9-.4.17-1 .37-2.2.43-1.3.07-1.7.07-4.9.07s-3.6 0-4.9-.07c-1.2-.06-1.8-.26-2.2-.43-.6-.22-1-.48-1.4-.9-.42-.4-.68-.8-.9-1.4-.17-.4-.37-1-.43-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.06-1.2.26-1.8.43-2.2.22-.6.48-1 .9-1.4.4-.42.8-.68 1.4-.9.4-.17 1-.37 2.2-.43C8.4 2.2 8.8 2.2 12 2.2zm0 3.6A6.2 6.2 0 1012 18.2 6.2 6.2 0 0012 5.8zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-10.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z',
+  Facebook:  'M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6 4.39 10.98 10.13 11.88v-8.4H7.08v-3.48h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.48h-2.8v8.4C19.61 23.05 24 18.07 24 12.07z',
+};
+---
+
+<section id="home" class="relative min-h-[88vh] flex bg-cloud bg-lavender-glow overflow-hidden" style="perspective: 1200px;">
+  <div class="container-xl relative flex-1 flex flex-col pt-24 pb-8">
+
+    <!-- Main composition -->
+    <div class="relative flex-grow grid grid-cols-1 lg:grid-cols-12 items-center gap-y-10">
+
+      <!-- Intro (left) -->
+      <div class="order-3 lg:order-1 lg:col-span-3 z-30 text-center lg:text-left anim anim-fade-right d4">
+        <span class="eyebrow justify-center lg:justify-start">{hero.overline}</span>
+        <p class="mt-4 text-body1 text-ink/60 max-w-xs mx-auto lg:mx-0">{hero.intro}</p>
+        <a href={hero.cta.href} class="btn-blue mt-6">
+          {hero.cta.label}
+          <span class="btn-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <!-- Portrait + circle (center) -->
+      <div class="order-1 lg:order-2 lg:col-span-5 relative flex justify-center items-center z-20">
+        <div id="hero-tilt" class="hero-tilt relative flex justify-center items-center">
+          <!-- soft outer ring -->
+          <div class="anim anim-scale d1 absolute inset-0 m-auto w-[min(90vw,34rem)] h-[min(90vw,34rem)] rounded-full border border-blue/30 z-0"></div>
+          <!-- accent disc (periwinkle halo) -->
+          <div class="anim anim-scale d2 absolute inset-0 m-auto w-[min(78vw,28rem)] h-[min(78vw,28rem)] rounded-full
+                      bg-gradient-to-br from-blue via-blue to-blue-dark z-0"></div>
+          <!-- portrait -->
+          <img
+            src={hero.photo}
+            alt={hero.photoAlt}
+            class="anim anim-photo d3 relative z-10 w-[min(58vw,20rem)] aspect-square object-cover object-top rounded-full ring-[10px] ring-white shadow-soft"
+          />
+        </div>
+      </div>
+
+      <!-- Oversized headline (right, overlaps portrait) -->
+      <div class="order-2 lg:order-3 lg:col-span-4 z-10 lg:-ml-24 pointer-events-none text-center lg:text-right anim anim-fade-up d5">
+        <h1 class="font-black leading-[0.88] tracking-tight text-ink text-[clamp(3.25rem,8vw,7rem)]">
+          <span class="block">{hero.big.line1}</span>
+          <span class="block">{hero.big.line2}</span>
+          <span class="block text-blue">{hero.big.line3}</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- Bottom bar: socials + location -->
+    <div class="relative z-30 flex items-center justify-between anim anim-fade-up d6">
+      <div class="flex items-center gap-5">
+        {hero.socials.map((s) => (
+          <a href={s.href} aria-label={s.label} class="text-ink/45 hover:text-blue transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+              <path d={icons[s.label]} />
+            </svg>
+          </a>
+        ))}
+      </div>
+      <div class="text-body2 font-medium text-ink/60">{hero.location}</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Subtle 3D parallax tilt on the portrait group
+  const section = document.getElementById('home');
+  const tilt = document.getElementById('hero-tilt');
+  if (section && tilt && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    section.addEventListener('mousemove', (e) => {
+      const r = section.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      tilt.style.transform = `rotateY(${px * 7}deg) rotateX(${-py * 7}deg)`;
+    });
+    section.addEventListener('mouseleave', () => { tilt.style.transform = ''; });
+  }
+</script>

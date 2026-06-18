@@ -1,0 +1,20 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  ratio?: string;     // e.g. 'aspect-[4/3]'
+  rounded?: string;   // e.g. 'rounded-card'
+  class?: string;
+}
+const {
+  src,
+  alt,
+  ratio = 'aspect-[4/3]',
+  rounded = 'rounded-card',
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`overflow-hidden ${ratio} ${rounded} bg-blue-light ${className}`}>
+  <img src={src} alt={alt} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+</div>

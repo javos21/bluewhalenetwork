@@ -1,0 +1,26 @@
+{
+  "name": "bluewhalenetwork",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "cms": "node --experimental-specifier-resolution=node dist-payload/server.js",
+    "dev:cms": "tsx watch payload/server.ts"
+  },
+  "dependencies": {
+    "astro": "^5.9.1",
+    "@astrojs/tailwind": "^5.1.4",
+    "tailwindcss": "^3.4.17",
+    "@tailwindcss/typography": "^0.5.15"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "@types/node": "^22.15.29"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

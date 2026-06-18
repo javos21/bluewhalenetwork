@@ -1,0 +1,117 @@
+---
+import { stories } from '@/data/site';
+import Photo from '@/components/ui/Photo.astro';
+
+const featured = stories.people[0];
+const others = stories.people.slice(1);
+---
+
+<section id="stories" class="section">
+  <div class="container-xl">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Left: heading -->
+      <div class="reveal">
+        <h2 class="text-[2rem] leading-[1.1] sm:text-h3 text-ink">
+          <span class="block">{stories.eyebrowA}</span>
+          <span class="block">{stories.eyebrowB} <span class="text-blue">{stories.highlight}</span></span>
+        </h2>
+        <p class="mt-5 text-body1 text-ink/55 max-w-md">{stories.subheading}</p>
+      </div>
+
+      <!-- Right: photo cluster -->
+      <div class="reveal" data-stories data-people={JSON.stringify(stories.people)}>
+        <div class="flex items-end gap-4">
+          <!-- Featured -->
+          <div class="relative flex-1">
+            <div class="aspect-[4/5] rounded-[28px] overflow-hidden bg-blue-light">
+              <img data-featured-img src={featured.image} alt={featured.alt} class="w-full h-full object-cover transition-opacity duration-300" />
+            </div>
+            <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur rounded-pill px-3 py-2 flex items-center gap-3 shadow-soft">
+              <img data-featured-avatar src={featured.image} alt="" class="w-9 h-9 rounded-full object-cover shrink-0" />
+              <span class="min-w-0">
+                <span data-featured-name class="block text-body2 font-bold text-ink truncate">{featured.name}</span>
+                <span data-featured-title class="block text-[12px] text-ink/50 truncate">{featured.title}</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Smaller stacked (clickable) -->
+          <div class="hidden sm:flex flex-col gap-4 w-28">
+            {others.map((p, i) => (
+              <button data-thumb data-index={i + 1} class="block rounded-[20px] overflow-hidden ring-2 ring-transparent hover:ring-blue/40 focus:outline-none focus:ring-blue transition" aria-label={`Show testimonial from ${p.name}`}>
+                <Photo src={p.image} alt={p.alt} ratio="aspect-square" rounded="rounded-[20px]" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center gap-3 mt-6 justify-end">
+          <button data-prev class="nav-circle bg-white text-ink border border-ink/10 hover:bg-cloud" aria-label="Previous testimonial">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <button data-next class="nav-circle bg-blue text-white hover:bg-blue-dark" aria-label="Next testimonial">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  type Person = { name: string; title: string; image: string; alt: string };
+
+  document.querySelectorAll<HTMLElement>('[data-stories]').forEach((root) => {
+    const people: Person[] = JSON.parse(root.dataset.people || '[]');
+    if (people.length < 2) return;
+
+    let current = 0;
+
+    const featImg    = root.querySelector<HTMLImageElement>('[data-featured-img]')!;
+    const featAvatar = root.querySelector<HTMLImageElement>('[data-featured-avatar]')!;
+    const featName   = root.querySelector<HTMLElement>('[data-featured-name]')!;
+    const featTitle  = root.querySelector<HTMLElement>('[data-featured-title]')!;
+    const thumbs     = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-thumb]'));
+
+    function render() {
+      const p = people[current];
+      featImg.style.opacity = '0';
+      window.setTimeout(() => {
+        featImg.src = p.image;
+        featImg.alt = p.alt;
+        featAvatar.src = p.image;
+        featName.textContent = p.name;
+        featTitle.textContent = p.title;
+        featImg.style.opacity = '1';
+      }, 180);
+
+      // Thumbnails show the other people, in order after the current one
+      thumbs.forEach((btn, i) => {
+        const idx = (current + i + 1) % people.length;
+        const img = btn.querySelector('img');
+        if (img) { img.src = people[idx].image; img.alt = people[idx].alt; }
+        btn.dataset.target = String(idx);
+      });
+    }
+
+    root.querySelector('[data-next]')?.addEventListener('click', () => {
+      current = (current + 1) % people.length;
+      render();
+    });
+    root.querySelector('[data-prev]')?.addEventListener('click', () => {
+      current = (current - 1 + people.length) % people.length;
+      render();
+    });
+    thumbs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        current = Number(btn.dataset.target ?? btn.dataset.index ?? 0);
+        render();
+      });
+    });
+  });
+</script>

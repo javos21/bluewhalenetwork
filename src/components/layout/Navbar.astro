@@ -1,0 +1,64 @@
+---
+import { navigation } from '@/data/site';
+import Logo from '@/components/ui/Logo.astro';
+---
+
+<header id="navbar" class="sticky top-0 z-50 transition-all duration-300" >
+  <div class="container-xl">
+    <div id="nav-inner" class="flex items-center justify-between h-20 transition-all duration-300">
+      <Logo label={navigation.logo} class="text-ink" />
+
+      <!-- Center nav -->
+      <nav class="hidden md:flex items-center gap-9">
+        {navigation.links.map((link) => (
+          <a href={link.href} class="text-body1 font-medium text-ink/70 hover:text-ink transition-colors">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- CTA -->
+      <a href={navigation.cta.href} class="hidden md:inline-flex btn-outline">
+        {navigation.cta.label}
+      </a>
+
+      <!-- Mobile toggle -->
+      <button id="nav-toggle" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-ink block"></span>
+        <span class="w-6 h-0.5 bg-ink block"></span>
+        <span class="w-6 h-0.5 bg-ink block"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div id="nav-drawer" class="md:hidden hidden flex-col gap-2 px-6 pb-6 bg-white border-t border-ink/5">
+    {navigation.links.map((link) => (
+      <a href={link.href} class="py-2 text-lg font-medium text-ink/80 hover:text-ink">{link.label}</a>
+    ))}
+    <a href={navigation.cta.href} class="btn-blue w-full justify-between mt-2">
+      {navigation.cta.label}
+      <span class="btn-arrow">→</span>
+    </a>
+  </div>
+</header>
+
+<script>
+  const navbar = document.getElementById('navbar')!;
+  const inner  = document.getElementById('nav-inner')!;
+  const toggle = document.getElementById('nav-toggle')!;
+  const drawer = document.getElementById('nav-drawer')!;
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 24) {
+      navbar.classList.add('bg-white/80', 'backdrop-blur-md', 'shadow-sm');
+    } else {
+      navbar.classList.remove('bg-white/80', 'backdrop-blur-md', 'shadow-sm');
+    }
+  }, { passive: true });
+
+  toggle.addEventListener('click', () => {
+    drawer.classList.toggle('hidden');
+    drawer.classList.toggle('flex');
+  });
+</script>
