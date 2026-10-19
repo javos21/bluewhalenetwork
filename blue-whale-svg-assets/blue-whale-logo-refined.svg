@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-labelledby="title desc">
+  <title id="title">Blue Whale Consulting — refined vector candidate</title>
+  <desc id="desc">Smooth curve reconstruction of the whale and flow bands with rebuilt geometric lettering.</desc>
+  <g id="blue-whale-mark">
+    <path id="whale-primary-mark" fill="#03466E" d="M195 221 C164 224 137 213 107 213 C89 213 77 220 60 210 C49 204 39 194 34 185 C48 194 61 194 75 184 C91 173 99 173 113 175 C105 158 111 146 118 132 C125 118 121 107 113 96 C136 108 149 128 149 151 L149 171 C149 191 158 202 177 202 C197 204 215 195 249 180 C288 163 319 151 350 155 C377 155 397 165 415 179 C394 170 375 165 359 167 C323 168 290 186 248 206 C226 216 210 220 195 221Z"/>
+    <path id="wave-medium-upper" fill="#4A95CF" d="M154 231 C177 240 199 244 228 239 C258 235 291 217 319 204 C348 191 376 189 406 195 C422 198 438 202 449 207 C424 190 399 181 373 181 C343 179 317 189 288 203 C253 219 226 231 194 233 C178 234 165 234 154 231Z"/>
+    <path id="wave-light" fill="#77CFF1" d="M303 233 C327 217 350 205 377 205 C408 204 439 216 462 230 C433 221 408 214 378 216 C351 216 328 225 303 233Z"/>
+    <path id="wave-medium-lower-left" fill="#4A95CF" d="M117 234 C149 248 175 256 206 256 C235 256 258 249 279 243 C255 260 235 267 210 266 C173 266 145 254 117 234Z"/>
+    <path id="wave-medium-lower-right" fill="#4A95CF" d="M258 274 C288 257 319 241 349 233 C380 224 412 225 435 238 C410 234 386 236 361 242 C326 251 292 266 258 274Z"/>
+  </g>
+  <g id="spout" opacity="0" pointer-events="none">
+    <path id="spout-center" d="M357.5 157 C356 143 354 135 358 124 C362 115 369 108 369 97" fill="none" stroke="#77CFF1" stroke-width="4.5" stroke-linecap="round"/>
+    <path id="spout-left" d="M356 151 C350 139 342 131 334 124" fill="none" stroke="#4A95CF" stroke-width="3.5" stroke-linecap="round"/>
+    <path id="spout-right" d="M360 150 C369 140 380 131 387 121" fill="none" stroke="#77CFF1" stroke-width="3.5" stroke-linecap="round"/>
+    <circle id="spout-drop-1" cx="331" cy="117" r="2.7" fill="#77CFF1"/>
+    <circle id="spout-drop-2" cx="391" cy="114" r="2.4" fill="#4A95CF"/>
+    <circle id="spout-drop-3" cx="369" cy="89" r="2.2" fill="#77CFF1"/>
+    <circle id="spout-drop-4" cx="345" cy="108" r="1.8" fill="#4A95CF"/>
+  </g>
+  <g id="blue-whale-wordmark" fill="#03466E" fill-rule="evenodd">
+    <path id="blue-b" d="M33 303H52C61 303 65 307 65 315V318C65 322 63 325 60 326C64 327 66 331 66 335V337C66 345 62 349 53 349H33ZM46 312V321H50C52 321 53 320 53 318V315C53 313 52 312 50 312ZM46 331V340H51C53 340 54 339 54 337V334C54 332 53 331 51 331Z"/>
+    <path id="blue-l" d="M80 303H93V339H107V349H80Z"/>
+    <path id="blue-u" d="M119 303H131V335C131 338 132 340 135 340C138 340 139 338 139 335V303H151V336C151 345 147 349 135 349C124 349 119 345 119 336Z"/>
+    <path id="blue-e" d="M166 303H193V312H179V321H191V330H179V339H194V349H166Z"/>
+    <path id="whale-w" d="M230 303H243L247 332L252 303H265L270 332L274 303H287L278 349H264L258 324L253 349H239Z"/>
+    <path id="whale-h" d="M301 303H314V321H322V303H335V349H322V331H314V349H301Z"/>
+    <path id="whale-a" d="M358 303H374L386 349H373L371 342H361L359 349H347ZM363 332H369L366 317Z"/>
+    <path id="whale-l" d="M398 303H411V339H424V349H398Z"/>
+    <path id="whale-e" d="M437 303H465V312H450V321H462V330H450V339H466V349H437Z"/>
+  </g>
+  <g id="consulting-wordmark" fill="none" stroke="#00151B" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round">
+    <path id="consulting-c" d="M72 379C66 372 56 376 56 386C56 396 66 400 72 392"/>
+    <path id="consulting-o" d="M108 377C95 377 95 395 108 395C121 395 121 377 108 377Z"/>
+    <path id="consulting-n1" d="M146 395V377L161 395V377"/>
+    <path id="consulting-s" d="M202 379C199 375 188 375 188 381C188 387 201 385 201 391C201 397 191 397 187 393"/>
+    <path id="consulting-u" d="M230 377V388C230 398 243 398 243 388V377"/>
+    <path id="consulting-l" d="M274 377V395H287"/>
+    <path id="consulting-t" d="M309 377H324M316.5 377V395"/>
+    <path id="consulting-i" d="M351 377V395"/>
+    <path id="consulting-n2" d="M382 395V377L396 395V377"/>
+    <path id="consulting-g" d="M441 379C435 374 424 377 424 386C424 397 434 398 440 392V386H434"/>
+  </g>
+</svg>

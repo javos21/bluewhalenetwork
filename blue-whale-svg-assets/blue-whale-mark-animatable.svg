@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="25 20 450 270" role="img" aria-labelledby="title desc">
+  <title id="title">Animatable Blue Whale mark</title>
+  <desc id="desc">Isolated animation-ready Blue Whale mark with independent flow layers and water spout.</desc>
+  <defs>
+    <clipPath id="clip-wave-medium-upper"><rect id="reveal-wave-medium-upper" x="149" y="177" width="307" height="68"/></clipPath>
+    <clipPath id="clip-wave-light"><rect id="reveal-wave-light" x="297" y="202" width="171" height="36"/></clipPath>
+    <clipPath id="clip-wave-medium-lower-left"><rect id="reveal-wave-medium-lower-left" x="112" y="229" width="174" height="41"/></clipPath>
+    <clipPath id="clip-wave-medium-lower-right"><rect id="reveal-wave-medium-lower-right" x="252" y="224" width="190" height="56"/></clipPath>
+  </defs>
+  <g id="blue-whale-mark">
+    <path id="whale-primary-mark" class="bw-primary" d="M 195.00,221.23 L 165.00,221.45 L 132.00,215.55 L 116.00,213.55 L 100.00,213.55 L 90.00,215.45 L 76.00,215.45 L 67.00,213.22 L 53.66,206.00 L 49.00,202.47 L 38.53,192.00 L 33.91,185.00 L 36.00,184.78 L 43.00,188.22 L 48.00,189.45 L 53.00,190.45 L 60.00,190.45 L 71.00,187.20 L 82.00,179.76 L 94.00,174.77 L 112.80,175.00 L 110.55,168.00 L 109.60,160.00 L 110.55,154.00 L 111.78,149.00 L 119.23,134.00 L 121.50,124.00 L 121.45,117.00 L 120.23,112.00 L 117.27,104.00 L 112.74,97.00 L 113.00,95.87 L 118.00,97.76 L 129.00,105.53 L 137.47,114.00 L 143.24,122.00 L 146.23,128.00 L 149.45,139.00 L 149.55,173.00 L 151.78,183.00 L 154.76,190.00 L 159.00,195.47 L 163.00,198.20 L 171.00,201.23 L 187.00,201.45 L 201.00,198.23 L 216.00,193.23 L 250.00,178.77 L 281.00,166.77 L 308.00,158.77 L 327.00,155.55 L 350.00,154.55 L 365.00,156.55 L 378.00,159.77 L 398.00,167.76 L 415.14,179.00 L 413.00,179.12 L 401.00,173.77 L 389.00,169.77 L 378.00,167.55 L 359.00,166.55 L 337.00,169.55 L 321.00,173.77 L 294.00,183.77 L 269.00,194.77 L 248.00,205.23 L 228.00,213.23 L 206.00,219.23 Z" fill="#03466E" fill-rule="evenodd"/>
+    <path id="wave-medium-upper" class="bw-secondary" d="M 214.00,240.23 L 194.00,240.50 L 184.00,239.45 L 163.00,235.23 L 154.10,232.00 L 153.87,231.00 L 156.00,231.74 L 167.00,231.55 L 171.00,232.50 L 194.00,232.50 L 219.00,229.23 L 231.00,226.23 L 256.00,217.23 L 314.00,190.77 L 326.00,186.77 L 344.00,182.55 L 361.00,180.55 L 373.00,180.55 L 376.00,181.45 L 382.00,181.55 L 407.00,186.77 L 428.00,194.73 L 444.00,202.77 L 449.05,206.00 L 449.29,207.00 L 417.00,197.77 L 395.00,193.55 L 384.00,192.50 L 367.00,192.50 L 358.00,193.55 L 338.00,197.77 L 320.00,203.77 L 277.00,223.23 L 247.00,234.23 L 229.00,238.45 Z" fill="#4A95CF" fill-rule="evenodd" clip-path="url(#clip-wave-medium-upper)"/>
+    <path id="wave-light" class="bw-accent" d="M 304.00,233.08 L 302.54,233.00 L 302.88,232.00 L 309.00,227.76 L 337.00,213.77 L 357.00,207.77 L 371.00,205.50 L 396.00,205.55 L 418.00,209.77 L 438.00,216.77 L 452.00,223.76 L 462.03,230.00 L 459.00,230.18 L 426.00,220.77 L 409.00,217.55 L 392.00,215.55 L 376.00,215.50 L 352.00,218.77 L 336.00,222.77 Z" fill="#77CFF1" fill-rule="evenodd" clip-path="url(#clip-wave-light)"/>
+    <path id="wave-medium-lower-left" class="bw-secondary" d="M 221.00,265.23 L 193.00,265.45 L 180.00,263.45 L 167.00,260.23 L 142.00,250.24 L 125.00,240.24 L 116.98,234.00 L 118.00,233.58 L 125.00,235.77 L 146.00,244.23 L 162.00,249.23 L 181.00,253.45 L 195.00,255.45 L 220.00,255.45 L 236.00,253.45 L 253.00,250.23 L 279.46,243.00 L 276.00,246.22 L 253.00,257.23 L 237.00,262.23 Z" fill="#4A95CF" fill-rule="evenodd" clip-path="url(#clip-wave-medium-lower-left)"/>
+    <path id="wave-medium-lower-right" class="bw-secondary" d="M 261.00,274.21 L 257.59,274.00 L 258.00,272.91 L 263.00,269.76 L 285.00,257.76 L 310.00,245.77 L 325.00,239.77 L 352.00,231.55 L 368.00,228.55 L 376.00,228.45 L 380.00,227.50 L 394.00,227.55 L 410.00,229.55 L 423.00,232.77 L 432.00,235.78 L 434.70,238.00 L 431.00,238.44 L 415.00,236.50 L 395.00,236.55 L 392.00,237.45 L 383.00,237.55 L 361.00,241.55 L 344.00,245.77 Z" fill="#4A95CF" fill-rule="evenodd" clip-path="url(#clip-wave-medium-lower-right)"/>
+  </g>
+  <g id="spout" class="bw-spout" opacity="0" pointer-events="none" transform="translate(240 60)">
+    <path id="spout-center" d="M117.5 97 C117.5 84 114 75 118 64 C121 55 129 48 129 37"
+          fill="none" stroke="#77CFF1" stroke-width="4.5" stroke-linecap="round"/>
+    <path id="spout-left" d="M116 91 C110 79 102 71 94 64"
+          fill="none" stroke="#4A95CF" stroke-width="3.5" stroke-linecap="round"/>
+    <path id="spout-right" d="M120 90 C129 80 140 71 147 61"
+          fill="none" stroke="#77CFF1" stroke-width="3.5" stroke-linecap="round"/>
+    <circle id="spout-drop-1" cx="91" cy="57" r="2.7" fill="#77CFF1"/>
+    <circle id="spout-drop-2" cx="151" cy="54" r="2.4" fill="#4A95CF"/>
+    <circle id="spout-drop-3" cx="129" cy="29" r="2.2" fill="#77CFF1"/>
+    <circle id="spout-drop-4" cx="105" cy="48" r="1.8" fill="#4A95CF"/>
+  </g>
+</svg>

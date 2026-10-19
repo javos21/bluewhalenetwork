@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="25 20 450 270" role="img" aria-labelledby="title desc">
+  <title id="title">Blue Whale water spout overlay</title>
+  <desc id="desc">Water-spout vector overlay aligned to the Blue Whale mark coordinate system.</desc>
+  <g id="spout" class="bw-spout" opacity="1" pointer-events="none" transform="translate(240 60)">
+    <path id="spout-center" d="M117.5 97 C117.5 84 114 75 118 64 C121 55 129 48 129 37"
+          fill="none" stroke="#77CFF1" stroke-width="4.5" stroke-linecap="round"/>
+    <path id="spout-left" d="M116 91 C110 79 102 71 94 64"
+          fill="none" stroke="#4A95CF" stroke-width="3.5" stroke-linecap="round"/>
+    <path id="spout-right" d="M120 90 C129 80 140 71 147 61"
+          fill="none" stroke="#77CFF1" stroke-width="3.5" stroke-linecap="round"/>
+    <circle id="spout-drop-1" cx="91" cy="57" r="2.7" fill="#77CFF1"/>
+    <circle id="spout-drop-2" cx="151" cy="54" r="2.4" fill="#4A95CF"/>
+    <circle id="spout-drop-3" cx="129" cy="29" r="2.2" fill="#77CFF1"/>
+    <circle id="spout-drop-4" cx="105" cy="48" r="1.8" fill="#4A95CF"/>
+  </g>
+</svg>

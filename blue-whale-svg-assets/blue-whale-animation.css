@@ -1,0 +1,27 @@
+/* Blue Whale SVG animation helpers */
+:root {
+  --bw-primary: #03466E;
+  --bw-secondary: #4A95CF;
+  --bw-accent: #77CFF1;
+  --bw-submark: #00151B;
+}
+
+.blue-whale-svg .bw-primary { fill: var(--bw-primary); }
+.blue-whale-svg .bw-secondary { fill: var(--bw-secondary); }
+.blue-whale-svg .bw-accent { fill: var(--bw-accent); }
+.blue-whale-svg .bw-submark-fill { fill: var(--bw-submark); }
+
+.blue-whale-svg #blue-whale-mark,
+.blue-whale-svg #whale-primary-mark,
+.blue-whale-svg [id^="wave-"],
+.blue-whale-svg #spout {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blue-whale-svg * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
