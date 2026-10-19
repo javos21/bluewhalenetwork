@@ -1,0 +1,22 @@
+---
+// Three thin flow lines taken from the logo's bands. They draw left to
+// right when scrolled into view (see .flow-divider in global.css).
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { tone = 'light', class: className = '' } = Astro.props;
+
+const strokes =
+  tone === 'dark'
+    ? ['var(--color-current)', 'var(--color-aqua)', 'rgb(255 255 255 / 0.22)']
+    : ['var(--color-deep)', 'var(--color-current)', 'var(--color-aqua)'];
+---
+
+<div class={`flow-divider container-site ${className}`} data-reveal aria-hidden="true">
+  <svg viewBox="0 0 1200 48" preserveAspectRatio="none" class="block h-8 w-full sm:h-10" focusable="false">
+    <path pathLength="1" stroke={strokes[0]} stroke-width="1.5" d="M0 30 C180 30 260 12 420 12 C600 12 680 34 860 30 C1000 27 1080 16 1200 14" />
+    <path pathLength="1" stroke={strokes[1]} stroke-width="1.5" d="M120 38 C300 38 380 20 540 20 C700 20 780 40 960 37 C1060 35 1130 28 1200 26" />
+    <path pathLength="1" stroke={strokes[2]} stroke-width="1.5" d="M260 46 C420 46 520 30 660 30 C800 30 900 46 1060 44 C1120 43 1170 40 1200 38" />
+  </svg>
+</div>

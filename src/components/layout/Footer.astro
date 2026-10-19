@@ -1,0 +1,31 @@
+---
+import Logo from '@/components/brand/Logo.astro';
+import FlowDivider from '@/components/motion/FlowDivider.astro';
+import { footerLinks, primaryCta, site } from '@/data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="on-dark bg-midnight text-white">
+  <FlowDivider tone="dark" />
+  <div class="container-site grid gap-12 pt-14 pb-10 md:grid-cols-[1.4fr_1fr] md:pt-20">
+    <div>
+      <Logo />
+      <p class="mt-6 max-w-md text-mist">{site.description}</p>
+      <a href={primaryCta.href} class="link-arrow mt-8 text-aqua">
+        {primaryCta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+    <nav aria-label="Footer">
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {footerLinks.map((link) => (
+          <li><a href={link.href} class="text-white/75 transition-colors hover:text-white">{link.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+  <div class="container-site flex flex-col gap-2 border-t border-white/10 py-6 text-sm text-mist sm:flex-row sm:justify-between">
+    <p>© {year} {site.name}. All rights reserved.</p>
+    <p class="text-white/45">{site.tagline}</p>
+  </div>
+</footer>

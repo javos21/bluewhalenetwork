@@ -1,40 +1,42 @@
-# Blue Whale — landing concept review
+# Blue Whale Consulting — bluewhalenetwork.com
 
-Motion-led landing page concept for Blue Whale Consulting. This review branch
-replaces the older Astro implementation with the current React, TypeScript,
-Vite and GSAP prototype. The existing `main` branch is unchanged.
+Marketing and lead-generation site for Blue Whale Consulting, built to Nic's
+October 2026 website brief. Static Astro site, deployed on Cloudflare Pages.
 
 ## Run locally
 
-Use Node.js 22.12+ (or 20.19+).
+Node.js 22.12+.
 
 ```sh
 npm ci
-npm run dev
+npm run dev        # http://localhost:4321
+npm run dev:labs   # same, with preview-only concepts under /labs
+npm run build      # static output in dist/
+npm run preview    # serve the build
 ```
 
-Open **http://localhost:5173/hero-study** for the landing concept, or
-**http://localhost:5173/animation-lab** for the individual motion experiments.
+## Structure
 
-## Checks
+| Path | What it is |
+|---|---|
+| `src/pages/` | One file per page. `labs/` builds only when `PUBLIC_SHOW_LABS=true`. |
+| `src/layouts/BaseLayout.astro` | `<head>`, SEO tags, page transitions, header and footer. |
+| `src/components/brand/` | The mark (inline SVG, recolourable) and the header lockup. |
+| `src/components/motion/` | `RevealHeading` (masked line reveal) and `FlowDivider` (logo flow lines). |
+| `src/scripts/` | `motion.ts` (scroll reveals) and `hero-intro.ts` (GSAP signature moment). |
+| `src/styles/global.css` | Design tokens, typography utilities, buttons, motion CSS. |
+| `src/data/site.ts` | Navigation and site-wide copy. |
+| `blue-whale-svg-assets/` | Logo vector sources. The refined version is awaiting Nic's sign-off. |
 
-```sh
-npm run build
-npm run lint
-node --test src/lib/whaleChoreography.test.mjs
-```
+## Build flags
 
-The motion test command uses Node.js 22.18+ for native TypeScript support.
-`npm run preview` serves a local production build after `npm run build`.
+| Variable | Value | Effect |
+|---|---|---|
+| `PUBLIC_SITE_ENV` | `production` | Allows indexing. Every other build gets `noindex`. |
+| `PUBLIC_SHOW_LABS` | `true` | Builds the `/labs` proofs of concept. A production build fails if both are set. |
 
-## Review notes
+Deployment and the launch-day domain checklist are in [docs/deploy.md](docs/deploy.md).
+Design and motion decisions are in [design.md](design.md).
 
-- The whale travels from the hero dive through partners and alternating sections.
-- Section boundaries use animated, flat-colour SVG waves.
-- Reduced-motion visitors receive static decorative whales.
-- Photography, service icons and partner marks are placeholders.
-- Service copy and assessment scoring are illustrative, not approved business claims.
-- Assessment and contact forms are frontend demos only: no data is sent or saved,
-  no email is delivered, and there is no backend integration.
-
-Design direction and motion notes are in `design.md` and `docs/`.
+The earlier Vite/React whale prototype lives on the `codex/landing-concept-review`
+branch; its notes are kept in `docs/prototype-notes/`.

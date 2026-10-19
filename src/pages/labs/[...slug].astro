@@ -1,0 +1,24 @@
+---
+// Preview-only proofs of concept. With PUBLIC_SHOW_LABS unset (production),
+// getStaticPaths returns nothing, so these pages are never built or shipped.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import InProgress from '@/components/sections/InProgress.astro';
+import { showLabs } from '@/lib/env';
+
+export function getStaticPaths() {
+  if (!showLabs) return [];
+  return [
+    { params: { slug: undefined }, props: { title: 'Labs', lines: ['Preview', 'Concepts.'], step: 'step 7' } },
+    { params: { slug: 'assessment' }, props: { title: 'Assessment (concept)', lines: ['Find Your', 'Starting Point.'], step: 'step 7' } },
+    { params: { slug: 'partners' }, props: { title: 'Partner grid (concept)', lines: ['Partner Grid', 'Concept.'], step: 'step 7' } },
+  ];
+}
+
+const { title, lines, step } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <PageIntro lines={lines} lede="Preview builds only. Not part of the live site." />
+  <InProgress step={step} />
+</BaseLayout>

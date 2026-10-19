@@ -1,0 +1,18 @@
+---
+// Dark page header used by every inner page.
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+
+interface Props {
+  lines: string[];
+  lede?: string;
+}
+const { lines, lede } = Astro.props;
+---
+
+<section class="on-dark bg-midnight text-white">
+  <div class="container-site pt-16 pb-16 sm:pt-24 sm:pb-20 lg:pt-28">
+    <RevealHeading as="h1" lines={lines} class="display max-w-5xl text-[clamp(2.25rem,1.2rem+4.2vw,5rem)]" />
+    {lede && <p class="lede reveal mt-8 max-w-2xl text-white/80" data-reveal style="--delay:200ms">{lede}</p>}
+    <slot />
+  </div>
+</section>

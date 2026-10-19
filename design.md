@@ -1,35 +1,82 @@
-# Blue Whale Consulting — design direction
+# Blue Whale Consulting — design and build decisions
 
-User preferences in this document override earlier design-system guidance and generated mockups.
+Agreed with Javed on 19 Oct 2026 after reviewing Nic's brief. Nic's brief is the
+source of truth for page structure and copy; this file records how it is built.
 
-## Design don'ts
+## Positioning and content
 
-- Do not use eyebrow headers: no small uppercase, widely tracked labels above hero headlines, section headings, or cards. Use the heading itself and useful supporting prose.
-- Do not repeat a section title in a decorative label above it.
-- Do not use generic consulting-template compositions as the default: oversized headline on one side and oversized full logo on the other.
-- Do not repeat large versions of the full logo within the same viewport.
-- Do not rely on white space, blue typography, and pill buttons alone to create personality.
-- Do not add interchangeable corporate slogans or service lists as decoration.
-- Do not introduce grain, distressed edges, artificial texture, or blur into brand assets.
-- Do not use gradients. Keep ocean layers and section backgrounds as clean, flat colour fills.
-- Do not treat raster mockups or AI-generated logo approximations as production SVG masters.
-- Do not preserve pixel stair-stepping when reconstructing vector curves or lettering.
-- Do not redesign the official identity through an unreviewed asset-cleanup operation. Present refinements as separate candidates.
-- Do not make the whale cartoonish, bouncy, or excessively animated.
-- Do not obscure copy or controls with the whale's movement.
+- Page structure, headlines and CTAs follow Nic's brief. Body copy gets a light
+  tightening pass (fewer repeats of "opportunity" and "commercial"), sent to Nic
+  as suggested edits.
+- Navigation: Home, What We Do, Products & Services, About, Contact, plus the
+  **Discuss an Opportunity** button. "Our Work" and "Insights" stay out until
+  real case studies and articles exist.
+- Home carries a short founder section for credibility.
+- Each of the seven offers gets its own page (`/services/<slug>`) from one
+  template: promise, who it's for, 3 deliverables, duration and format, how it
+  works, related offer, and a CTA that pre-fills the contact form.
 
-## Positive direction
+## Visual system
 
-The site needs a distinctive personality through composition, typography, scale, contrast, and deliberate motion. Explore confident asymmetry and a memorable whale journey. Keep the consulting proposition clear and commercially grounded. Blue Whale Consulting is the working name.
+- **Colour** comes from the logo; flat fills only, no gradients.
+  Midnight `#00151B`, Deep Ocean `#03466E`, Current Blue `#4A95CF`,
+  Aqua Mist `#77CFF1` (the single accent on dark), Paper `#F5F3EE`.
+- **Dark hero** with big white type. Content-heavy sections are light for
+  readability; dark blocks mark emphasis.
+- **Type**: Archivo (variable, self-hosted). Headlines at 125% width,
+  weight 700–800, which echoes the wide wordmark. Body text uses Archivo at normal width.
+- No eyebrow labels above headings. No stock photography; real photography
+  only when it exists.
+- The whale and ocean journey from the prototype is retired. The mark appears
+  in the header, the hero signature moment and the favicon.
 
-The accepted exploration is an SVG ocean along the bottom of the hero, with broad, slowly moving layers. The whale gently surfaces through the waterline and dives beneath it as the visitor scrolls into the next section. This literal ocean treatment is user-directed and supersedes earlier advice against an ocean motif. Keep it restrained, graphic, and free of decorative labels.
+## Motion vocabulary
 
-The hero's navy foreground wave matches the dark-blue partner section exactly, with light-blue and medium-blue waves behind. Use cream partner text and a pale whale with cyan flow bands for contrast. The following expertise section is medium blue with deep-blue text, connected by an SVG wave edge. Progressively darker sections are no longer a requirement; another depth cue can be explored later. Partner marks sit in a two-column, four-row grid without divider lines or visible placeholder disclaimers. Use labelled placeholder marks until actual logos are provided; do not imply confirmed relationships.
+Restrained and consistent. There is no scroll-jacking or pinning anywhere.
 
-## Asset quality
+1. **Signature moment**: on the first home visit of a session, the flow bands
+   draw in left to right, the whale settles, and the headline rises (~1.5s, GSAP).
+2. **Headline reveals**: lines rise out of a mask on scroll (CSS, 700ms).
+3. **Flow-line dividers**: three strokes from the logo curves draw on scroll.
+4. **Page transitions**: Astro ClientRouter cross-fade with a small rise.
+5. **Hover states**: arrows nudge 4px, cards lift 3px, colour shifts in 200ms.
 
-The supplied SVG pack was reconstructed from a 500 × 500 PNG. Its outlines use many short straight segments, including stepped wordmark edges. Vector format alone does not make those contours smooth.
+Easing everywhere is `cubic-bezier(0.22, 1, 0.36, 1)`. With reduced motion
+everything is shown immediately. Without JS, content is simply visible.
 
-Prefer an original native vector master if available. Otherwise rebuild the whale and wave contours with smooth Bézier curves and reconstruct lettering accurately. Preserve branded proportions, flat colors, animation groups, IDs, and the corrected spout origin. Keep cleanup candidates separate from current assets until reviewed.
+## Architecture
 
-AI image generation is useful for exploring identity directions; vectorization tools can create initial paths. Both require visual review. The rejected raster mockups are not an approved design direction.
+- Astro static output. Most pages ship only the router and reveal script
+  (~16 KB). GSAP loads on the home page only.
+- React is used only for islands with real state: the contact form and the
+  assessment, loaded with `client:visible`.
+- Hosting: Cloudflare Pages, with a free preview URL for every branch.
+- Contact form → Pages Function (Turnstile check, honeypot, rate limit) →
+  Google Apps Script on Nic's account → row in a "Leads" sheet + email
+  notification. Use Nic's CRM instead if he has one.
+- Analytics: GA4 on Nic's Google account, Consent Mode v2, region-based
+  defaults (consent required for EU/UK, opt-out elsewhere). Nic to confirm.
+- QR stickers point at `/s/<code>` redirects in `public/_redirects`, which add
+  UTM tags (`utm_medium=qr`, `utm_content=<code>`). A sheet records which code
+  is which sticker design or location.
+
+## Proofs of concept (preview builds only)
+
+Behind `PUBLIC_SHOW_LABS=true`, never in production:
+
+- **Assessment**: 4–5 questions that recommend one of Nic's offers and
+  pre-fill the contact form. Placeholder questions until Nic writes real ones.
+  It gives a recommendation, never a numeric score.
+- **Partner grid**: obviously fictional placeholder names, captioned
+  "This is how your partners would appear".
+
+## Build order
+
+1. Shell: tokens, type, layout, nav/footer, motion, previews (done)
+2. Home
+3. Products & Services + 7 offer pages
+4. Contact + form pipeline
+5. `/opportunity` + QR redirects
+6. What We Do, About
+7. Labs: assessment, partner grid
+8. GA4 + consent, SEO, accessibility pass, real-phone testing

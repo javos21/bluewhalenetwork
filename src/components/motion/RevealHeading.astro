@@ -1,0 +1,23 @@
+---
+// Headline whose lines rise out of a mask when scrolled into view.
+// Pass `lines` so line breaks are deliberate and identical at every
+// width the design is set for; on narrow screens long lines still wrap
+// inside their own mask.
+type Tag = 'h1' | 'h2' | 'h3' | 'p';
+interface Props {
+  as?: Tag;
+  lines: string[];
+  class?: string;
+  /** Mark the last line with the accent colour */
+  accentLast?: boolean;
+}
+const { as: Tag = 'h2', lines, class: className = '', accentLast = false } = Astro.props;
+---
+
+<Tag class={`reveal-lines ${className}`} data-reveal aria-label={lines.join(' ')}>
+  {lines.map((line, i) => (
+    <span class="line" aria-hidden="true" style={`--i:${i}`}>
+      <span class:list={[accentLast && i === lines.length - 1 && 'accent-line']}>{line}</span>
+    </span>
+  ))}
+</Tag>

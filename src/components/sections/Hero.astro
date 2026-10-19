@@ -1,0 +1,41 @@
+---
+import Mark from '@/components/brand/Mark.astro';
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import { primaryCta } from '@/data/site';
+
+const hero = {
+  lines: ['Turn Opportunities', 'Into Commercial', 'Value.'],
+  lede: 'Blue Whale identifies opportunities, develops commercial strategies and helps businesses bring ideas to market.',
+  secondary: { label: 'Explore Our Solutions', href: '/services' },
+};
+---
+
+<section class="on-dark relative overflow-hidden bg-midnight text-white" data-hero>
+  <div class="container-site grid content-center gap-y-10 pt-12 pb-14 lg:min-h-[calc(100svh-5rem)] lg:max-h-[60rem] lg:grid-cols-12 lg:gap-x-8 lg:gap-y-14 lg:pt-14 lg:pb-16">
+    <RevealHeading
+      as="h1"
+      lines={hero.lines}
+      accentLast
+      class="display text-[clamp(2.15rem,0.9rem+5.2vw,5.75rem)] lg:col-span-12 [&_.accent-line]:text-aqua"
+    />
+
+    <div class="flex flex-col gap-8 lg:col-span-6 lg:self-end">
+      <p class="lede reveal max-w-xl text-white/80" data-reveal style="--delay:260ms">{hero.lede}</p>
+      <div class="reveal flex flex-wrap gap-3" data-reveal style="--delay:380ms">
+        <a href={primaryCta.href} class="btn btn-accent">
+          {primaryCta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href={hero.secondary.href} class="btn btn-ghost-dark">{hero.secondary.label}</a>
+      </div>
+    </div>
+
+    <div class="pointer-events-none flex justify-end lg:col-span-6 lg:self-end">
+      <Mark tone="light" animate class="w-[min(72vw,26rem)] overflow-visible lg:w-full lg:max-w-[30rem]" />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initHeroIntro } from '@/scripts/hero-intro';
+  document.addEventListener('astro:page-load', initHeroIntro);
+</script>

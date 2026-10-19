@@ -1,0 +1,37 @@
+---
+// The Blue Whale mark as inline SVG so it can be recoloured per surface
+// and animated (hero intro addresses the [data-mark-*] hooks).
+import { MARK_VIEWBOX, markPaths } from '@/lib/logo';
+
+interface Props {
+  /** 'light' for use on dark surfaces, 'brand' for light surfaces */
+  tone?: 'brand' | 'light';
+  class?: string;
+  /** Decorative by default; pass a label to expose it to assistive tech */
+  label?: string;
+  animate?: boolean;
+}
+
+const { tone = 'brand', class: className = '', label, animate = false } = Astro.props;
+
+const whaleFill = tone === 'light' ? '#ffffff' : 'var(--color-deep)';
+const toneFill = { current: 'var(--color-current)', aqua: 'var(--color-aqua)' } as const;
+---
+
+<svg
+  viewBox={MARK_VIEWBOX}
+  xmlns="http://www.w3.org/2000/svg"
+  class={className}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+  data-mark={animate ? 'hero' : undefined}
+>
+  <g data-mark-bands>
+    {markPaths.bands.map((band) => (
+      <path d={band.d} fill={toneFill[band.tone]} data-mark-band={band.key} />
+    ))}
+  </g>
+  <path d={markPaths.whale} fill={whaleFill} data-mark-whale />
+</svg>

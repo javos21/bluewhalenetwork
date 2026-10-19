@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import InProgress from '@/components/sections/InProgress.astro';
+---
+
+<BaseLayout title="Products & Services" description="Structured starting points for exploring opportunities, developing strategy and moving promising initiatives forward.">
+  <PageIntro lines={['A Clear Starting Point', 'for Your Next', 'Commercial Move.']} lede="Every business faces different challenges. Our structured offers provide practical starting points for exploring opportunities, developing strategy and moving promising initiatives forward." />
+  <InProgress step="step 3" />
+</BaseLayout>

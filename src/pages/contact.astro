@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import InProgress from '@/components/sections/InProgress.astro';
+---
+
+<BaseLayout title="Start a Conversation" description="Tell us about your business, idea or commercial challenge.">
+  <PageIntro lines={['What Opportunity', 'Are You Looking', 'to Develop?']} lede="Tell us a little about your business, idea or commercial challenge." />
+  <InProgress step="step 4" />
+</BaseLayout>

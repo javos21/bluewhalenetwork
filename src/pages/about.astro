@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import InProgress from '@/components/sections/InProgress.astro';
+---
+
+<BaseLayout title="About" description="Blue Whale Consulting works with businesses to identify opportunities, develop commercial strategies and turn promising ideas into actionable propositions.">
+  <PageIntro lines={['Commercial Thinking.', 'Opportunity by Opportunity.']} lede="Blue Whale Consulting works with businesses to identify opportunities, develop commercial strategies and turn promising ideas into actionable propositions." />
+  <InProgress step="step 6" />
+</BaseLayout>

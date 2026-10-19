@@ -1,0 +1,250 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Blue Whale Consulting — design tokens
+   Palette comes from the logo. Flat fills only, no gradients.
+   --------------------------------------------------------------- */
+@theme {
+  --color-midnight: #00151b;   /* darkest surface, body text on light */
+  --color-abyss: #001f31;      /* raised dark surface */
+  --color-deep: #03466e;       /* Deep Ocean — primary brand */
+  --color-current: #4a95cf;    /* Current Blue — secondary */
+  --color-aqua: #77cff1;       /* Aqua Mist — single accent on dark */
+  --color-paper: #f5f3ee;      /* warm light surface */
+  --color-ice: #eaf2f5;        /* cool light surface */
+  --color-slate: #4f6169;      /* secondary text on light */
+  --color-mist: #a9bec7;       /* secondary text on dark */
+  --color-rule: #d9e1e4;       /* hairlines on light */
+
+  --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --ease-water: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --container-site: 80rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-midnight);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-aqua);
+    color: var(--color-midnight);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-current);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-aqua);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Typography
+   Display type is Archivo at its widest (125%) — echoes the wide,
+   geometric lettering of the Blue Whale wordmark.
+   --------------------------------------------------------------- */
+@utility display {
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+@utility heading {
+  font-stretch: 118%;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+@utility wordmark {
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+@utility lede {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.3125rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ---------------------------------------------------------------
+   Buttons and links
+   --------------------------------------------------------------- */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0 1.5rem;
+    border-radius: 6px;
+    font-weight: 650;
+    font-stretch: 110%;
+    letter-spacing: 0.005em;
+    line-height: 1.1;
+    transition:
+      background-color 200ms var(--ease-water),
+      color 200ms var(--ease-water),
+      border-color 200ms var(--ease-water),
+      transform 200ms var(--ease-water);
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-arrow {
+    display: inline-block;
+    transition: transform 250ms var(--ease-water);
+  }
+  .btn:hover .btn-arrow,
+  .link-arrow:hover .btn-arrow { transform: translateX(4px); }
+
+  /* Primary on dark: Aqua Mist with midnight text */
+  .btn-accent {
+    background: var(--color-aqua);
+    color: var(--color-midnight);
+  }
+  .btn-accent:hover { background: #a7e0f5; }
+
+  /* Primary on light: Deep Ocean */
+  .btn-primary {
+    background: var(--color-deep);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #023652; }
+
+  .btn-ghost-dark {
+    border: 1px solid rgb(255 255 255 / 0.28);
+    color: #fff;
+  }
+  .btn-ghost-dark:hover { border-color: var(--color-aqua); color: var(--color-aqua); }
+
+  .btn-ghost {
+    border: 1px solid var(--color-rule);
+    color: var(--color-deep);
+  }
+  .btn-ghost:hover { border-color: var(--color-current); background: #fff; }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 650;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    transition: text-decoration-color 200ms var(--ease-water);
+  }
+  .link-arrow:hover { text-decoration-color: currentColor; }
+}
+
+/* ---------------------------------------------------------------
+   Motion — see docs/motion.md
+   Everything here is progressive: without JS or with reduced motion,
+   content is simply visible.
+   --------------------------------------------------------------- */
+
+/* Masked headline reveal: each .line rises out of its own clip. */
+.reveal-lines .line {
+  display: block;
+  overflow: hidden;
+  /* room for descenders so the clip doesn't crop them */
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.reveal-lines .line > span { display: block; }
+
+.js-motion .reveal-lines:not(.is-in) .line > span {
+  transform: translateY(105%);
+}
+.js-motion .reveal-lines .line > span {
+  transition: transform 700ms var(--ease-water);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* Hero mark stays hidden until the intro timeline takes over. The
+   failsafe shows it anyway if the script never runs. */
+.intro-pending [data-mark='hero'] {
+  visibility: hidden;
+  animation: bw-failsafe 0s 2.5s forwards;
+}
+@keyframes bw-failsafe { to { visibility: visible; } }
+
+/* Simple fade-up for supporting copy */
+.js-motion .reveal:not(.is-in) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+.js-motion .reveal {
+  transition:
+    opacity 700ms var(--ease-water),
+    transform 700ms var(--ease-water);
+  transition-delay: var(--delay, 0ms);
+}
+
+/* Flow-line divider: strokes draw themselves when scrolled to. */
+.flow-divider path {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.js-motion .flow-divider path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1400ms var(--ease-water);
+}
+.js-motion .flow-divider path:nth-child(2) { transition-delay: 120ms; }
+.js-motion .flow-divider path:nth-child(3) { transition-delay: 240ms; }
+.js-motion .flow-divider.is-in path { stroke-dashoffset: 0; }
+
+/* Cards: borders sharpen, slight lift */
+.card-hover {
+  transition:
+    border-color 250ms var(--ease-water),
+    transform 300ms var(--ease-water),
+    background-color 250ms var(--ease-water);
+}
+.card-hover:hover { transform: translateY(-3px); }
+
+/* Page transitions (Astro ClientRouter) — a short cross-fade with a
+   small rise on the incoming page. */
+::view-transition-old(root) {
+  animation: 220ms var(--ease-water) both vt-out;
+}
+::view-transition-new(root) {
+  animation: 420ms var(--ease-water) both vt-in;
+}
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}

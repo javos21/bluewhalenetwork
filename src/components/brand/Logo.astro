@@ -1,0 +1,21 @@
+---
+// Horizontal lockup for the header and footer: mark + wordmark.
+// The stacked master lockup (mark over BLUE WHALE / CONSULTING) is too
+// tall for a nav bar, so the wordmark is set in Archivo Expanded here.
+import Mark from './Mark.astro';
+
+interface Props {
+  tone?: 'brand' | 'light';
+  class?: string;
+  compact?: boolean;
+}
+const { tone = 'light', class: className = '', compact = false } = Astro.props;
+---
+
+<a href="/" class={`group inline-flex items-center gap-3 ${className}`} aria-label="Blue Whale Consulting — home">
+  <Mark tone={tone} class="h-7 w-auto shrink-0 sm:h-8" />
+  <span class:list={['flex flex-col leading-none', compact && 'max-sm:sr-only']}>
+    <span class:list={['wordmark text-[0.95rem] sm:text-base', tone === 'light' ? 'text-white' : 'text-deep']}>Blue Whale</span>
+    <span class:list={['mt-1 text-[0.62rem] font-medium uppercase tracking-[0.42em]', tone === 'light' ? 'text-mist' : 'text-slate']}>Consulting</span>
+  </span>
+</a>

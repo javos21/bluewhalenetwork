@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+---
+
+<BaseLayout title="Page not found" description="This page could not be found.">
+  <PageIntro lines={['This Page Has', 'Drifted Off.']} lede="The page you were looking for doesn't exist or has moved.">
+    <a href="/" class="btn btn-accent mt-10">Back to home<span class="btn-arrow" aria-hidden="true">→</span></a>
+  </PageIntro>
+</BaseLayout>

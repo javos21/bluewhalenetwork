@@ -1,0 +1,112 @@
+---
+import Logo from '@/components/brand/Logo.astro';
+import { navigation, primaryCta } from '@/data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header
+  class="on-dark sticky top-0 z-50 bg-midnight text-white transition-[box-shadow] duration-300"
+  data-site-header
+  transition:name="site-header"
+>
+  <div class="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
+    <Logo compact />
+
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex items-center gap-8 text-[0.95rem]">
+        {navigation.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class="relative py-2 text-white/75 transition-colors duration-200 hover:text-white aria-[current=page]:text-white after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-aqua after:transition-transform after:duration-300 after:ease-[var(--ease-water)] hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href={primaryCta.href} class="btn btn-accent min-h-11 px-4 text-sm sm:px-5">
+        <span class="sm:hidden">Discuss</span>
+        <span class="max-sm:hidden">{primaryCta.label}</span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+      <button
+        type="button"
+        class="inline-flex size-11 items-center justify-center rounded-md text-white hover:bg-white/10 lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <span class="sr-only">Menu</span>
+        <svg viewBox="0 0 24 24" class="size-6" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+          <path d="M4 8h16" class="origin-center transition-transform duration-300" data-bar-top />
+          <path d="M4 16h16" class="origin-center transition-transform duration-300" data-bar-bottom />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    aria-label="Main"
+    class="grid grid-rows-[0fr] border-t border-transparent transition-[grid-template-rows,border-color] duration-400 ease-[var(--ease-water)] data-[open]:grid-rows-[1fr] data-[open]:border-white/10 lg:hidden"
+    data-mobile-menu
+    inert
+  >
+    <ul class="container-site min-h-0 overflow-hidden">
+      {navigation.map((item) => (
+        <li class="border-b border-white/10 last:border-0">
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class="heading flex items-center justify-between py-4 text-xl text-white/85 aria-[current=page]:text-aqua"
+          >
+            {item.label}<span aria-hidden="true" class="text-mist">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  // Listeners on document/window outlive a page swap, so each page load
+  // aborts the previous set before binding again.
+  let controller: AbortController | undefined;
+
+  function initHeader() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+    if (!header || !toggle || !menu) return;
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.toggleAttribute('data-open', open);
+      menu.inert = !open;
+      toggle.querySelector('[data-bar-top]')?.setAttribute('style', open ? 'transform: translateY(4px) rotate(45deg)' : '');
+      toggle.querySelector('[data-bar-bottom]')?.setAttribute('style', open ? 'transform: translateY(-4px) rotate(-45deg)' : '');
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    }, { signal });
+
+    const onScroll = () => header.classList.toggle('shadow-[0_1px_0_rgb(255_255_255/0.08)]', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+  }
+  document.addEventListener('astro:page-load', initHeader);
+</script>
