@@ -6,8 +6,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://bluewhalenetwork.com',
   output: 'static',
-  trailingSlash: 'never',
-  build: { format: 'file' },
+  // Directory output (about/index.html) is served at /about by every static host.
+  trailingSlash: 'ignore',
+  build: { format: 'directory' },
   integrations: [
     react(),
     sitemap({

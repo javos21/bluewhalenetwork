@@ -1,3 +1,22 @@
+# Deploying
+
+The site is a pure static build (`dist/`), so any static host works.
+
+## Test link on Render (for client review)
+
+1. Render dashboard → **New → Static Site** → connect `javos21/bluewhalenetwork`.
+2. Settings:
+   - Branch: `astro-rebuild`
+   - Build command: `npm ci && npm run build:labs`
+     (use `npm ci && npm run build` for a version without the proofs of concept)
+   - Publish directory: `dist`
+3. Node version comes from `.node-version` (22.12.0).
+4. Do **not** set `PUBLIC_SITE_ENV`, so the test site stays `noindex`.
+
+Every push to `astro-rebuild` redeploys automatically. The URL looks like
+`https://bluewhalenetwork.onrender.com`. It isn't password protected, but it
+isn't indexed either, so share it only with Nic.
+
 # Deploying to Cloudflare Pages
 
 ## One-time setup
