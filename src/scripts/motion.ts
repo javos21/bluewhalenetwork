@@ -127,9 +127,17 @@ function armScrollEffects() {
   window.addEventListener('resize', onScroll, { passive: true, signal: scrollController.signal });
 }
 
-/* ---------- word carousel ([data-rotator]) ---------- */
+/* ---------- word rotate ([data-rotator]) ---------- */
 
 let rotatorTimers: number[] = [];
+
+/** Fix the highlight block to the widest phrase so it never resizes. */
+function fitRotator(box: HTMLElement) {
+  const cs = getComputedStyle(box);
+  const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+  const widest = Math.max(...[...box.querySelectorAll<HTMLElement>('.rotator-word')].map((w) => w.scrollWidth));
+  box.style.width = `${Math.ceil(widest + pad)}px`;
+}
 
 function armRotators() {
   rotatorTimers.forEach((t) => window.clearInterval(t));
@@ -139,12 +147,7 @@ function armRotators() {
     const words = [...box.querySelectorAll<HTMLElement>('.rotator-word')];
     if (words.length < 2) return;
 
-    // Size the block to the active phrase (plus the block's own padding).
-    const fit = (word: HTMLElement) => {
-      const pad = parseFloat(getComputedStyle(box).paddingLeft) + parseFloat(getComputedStyle(box).paddingRight);
-      box.style.width = `${word.scrollWidth + pad}px`;
-    };
-    fit(words[0]);
+    fitRotator(box);
     if (reduceMotion()) return;
 
     let index = 0;
@@ -171,8 +174,7 @@ function armRotators() {
       void next.offsetWidth;
       next.style.transition = '';
       next.setAttribute('data-active', '');
-      fit(next);
-      window.setTimeout(() => current.removeAttribute('data-leaving'), 600);
+      window.setTimeout(() => current.removeAttribute('data-leaving'), 700);
     }, 200);
     rotatorTimers.push(timer);
   });
@@ -187,13 +189,8 @@ document.addEventListener('astro:page-load', () => {
   armScrollEffects();
   armRotators();
 });
-// Refit the carousel block when the headline size changes (resize, font load).
+// Refit the word-rotate block when the headline size changes (resize, font load).
 window.addEventListener('resize', () => {
-  document.querySelectorAll<HTMLElement>('[data-rotator]').forEach((box) => {
-    const active = box.querySelector<HTMLElement>('.rotator-word[data-active]');
-    if (!active) return;
-    const pad = parseFloat(getComputedStyle(box).paddingLeft) + parseFloat(getComputedStyle(box).paddingRight);
-    box.style.width = `${active.scrollWidth + pad}px`;
-  });
+  document.querySelectorAll<HTMLElement>('[data-rotator]').forEach(fitRotator);
 });
 document.fonts?.ready.then(() => window.dispatchEvent(new Event('resize')));
