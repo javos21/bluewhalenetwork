@@ -1,8 +1,0 @@
-/* Minimal branding override for Payload admin panel */
-:root {
-  --theme-elevation-0:   #020617;
-  --theme-elevation-50:  #0F172A;
-  --theme-elevation-100: #1E293B;
-  --theme-elevation-200: #334155;
-  --theme-success-500:   #059669;
-}
