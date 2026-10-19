@@ -10,6 +10,9 @@ import { primaryCta } from '@/data/site';
 
 const hero = {
   lines: ['Turn Opportunities Into', 'Commercial Value.'],
+  // Word carousel on the highlighted line. Nic's phrase always comes first;
+  // the rest are suggestions listed in docs/copy-edits.md for his approval.
+  rotate: ['New Revenue.', 'Lasting Growth.', 'Partnerships.', 'Market Advantage.'],
   lede: 'Blue Whale identifies opportunities, develops commercial strategies and helps businesses bring ideas to market.',
   secondary: { label: 'Explore Our Solutions', href: '/services' },
 };
@@ -29,6 +32,7 @@ const hero = {
       as="h1"
       lines={hero.lines}
       highlightLast
+      rotate={hero.rotate}
       class="display mx-auto max-w-5xl text-center text-[clamp(2.4rem,1rem+5vw,5.4rem)]"
     />
 

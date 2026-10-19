@@ -223,6 +223,30 @@
   transition: transform 700ms var(--ease-water) calc(var(--i, 0) * 90ms + 380ms);
 }
 
+/* Rotating phrase inside the highlight block (word carousel).
+   All phrases share one grid cell; only the active one is visible. The
+   block's width is animated to the active phrase by motion.ts. */
+.rotator {
+  display: inline-grid;
+  vertical-align: bottom;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: width 550ms var(--ease-water);
+}
+.rotator-word {
+  grid-area: 1 / 1;
+  justify-self: start;
+  opacity: 0;
+  transform: translateY(60%);
+  filter: blur(4px);
+  transition:
+    opacity 450ms var(--ease-water),
+    transform 550ms var(--ease-water),
+    filter 450ms var(--ease-water);
+}
+.rotator-word[data-active] { opacity: 1; transform: none; filter: none; }
+.rotator-word[data-leaving] { opacity: 0; transform: translateY(-60%); filter: blur(4px); }
+
 /* Fade-up */
 .js-motion .reveal:not(.is-in) { opacity: 0; transform: translateY(16px); }
 .js-motion .reveal {

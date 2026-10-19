@@ -127,6 +127,57 @@ function armScrollEffects() {
   window.addEventListener('resize', onScroll, { passive: true, signal: scrollController.signal });
 }
 
+/* ---------- word carousel ([data-rotator]) ---------- */
+
+let rotatorTimers: number[] = [];
+
+function armRotators() {
+  rotatorTimers.forEach((t) => window.clearInterval(t));
+  rotatorTimers = [];
+
+  document.querySelectorAll<HTMLElement>('[data-rotator]').forEach((box) => {
+    const words = [...box.querySelectorAll<HTMLElement>('.rotator-word')];
+    if (words.length < 2) return;
+
+    // Size the block to the active phrase (plus the block's own padding).
+    const fit = (word: HTMLElement) => {
+      const pad = parseFloat(getComputedStyle(box).paddingLeft) + parseFloat(getComputedStyle(box).paddingRight);
+      box.style.width = `${word.scrollWidth + pad}px`;
+    };
+    fit(words[0]);
+    if (reduceMotion()) return;
+
+    let index = 0;
+    let nextAt = 0; // timestamp of the next change; 0 = not revealed yet
+    const interval = Number(box.dataset.interval) || 2800;
+    // Poll briefly so changes land on time; the work only happens at nextAt.
+    const timer = window.setInterval(() => {
+      // Hold still until the headline has revealed, and while the tab is hidden.
+      if (document.hidden || !box.closest('.is-in')) return;
+      const now = performance.now();
+      // Nic's own line gets a slightly longer first beat once revealed.
+      if (!nextAt) nextAt = now + interval + 400;
+      if (now < nextAt) return;
+      nextAt = now + interval;
+      const current = words[index];
+      index = (index + 1) % words.length;
+      const next = words[index];
+
+      current.removeAttribute('data-active');
+      current.setAttribute('data-leaving', '');
+      // Start the incoming word from below without animating that reset.
+      next.style.transition = 'none';
+      next.removeAttribute('data-leaving');
+      void next.offsetWidth;
+      next.style.transition = '';
+      next.setAttribute('data-active', '');
+      fit(next);
+      window.setTimeout(() => current.removeAttribute('data-leaving'), 600);
+    }, 200);
+    rotatorTimers.push(timer);
+  });
+}
+
 // ClientRouter swaps <html> attributes on navigation; re-arm before paint.
 document.addEventListener('astro:after-swap', () => {
   if (!reduceMotion()) document.documentElement.classList.add('js-motion');
@@ -134,4 +185,15 @@ document.addEventListener('astro:after-swap', () => {
 document.addEventListener('astro:page-load', () => {
   armReveals();
   armScrollEffects();
+  armRotators();
 });
+// Refit the carousel block when the headline size changes (resize, font load).
+window.addEventListener('resize', () => {
+  document.querySelectorAll<HTMLElement>('[data-rotator]').forEach((box) => {
+    const active = box.querySelector<HTMLElement>('.rotator-word[data-active]');
+    if (!active) return;
+    const pad = parseFloat(getComputedStyle(box).paddingLeft) + parseFloat(getComputedStyle(box).paddingRight);
+    box.style.width = `${active.scrollWidth + pad}px`;
+  });
+});
+document.fonts?.ready.then(() => window.dispatchEvent(new Event('resize')));

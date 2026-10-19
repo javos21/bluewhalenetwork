@@ -49,7 +49,8 @@ Restrained and consistent. There is no scroll-jacking or pinning anywhere.
 
 1. **Intro**: on the first home visit of a session, the mark draws in on
    midnight, then flies into the header as the overlay lifts (~1.6s).
-2. **Hero build**: the headline rises, the Aqua highlight sweeps in, the
+2. **Hero build**: the headline rises, the Aqua highlight sweeps in (its
+   phrase then cycles as a word carousel, with the block resizing to fit), the
    portrait rises out of its block, then the chips pop in and float and the
    connectors draw.
 3. **Headline reveals**: lines rise out of a mask on scroll.
