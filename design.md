@@ -72,11 +72,4 @@ Behind `PUBLIC_SHOW_LABS=true`, never in production:
 
 ## Build order
 
-1. Shell: tokens, type, layout, nav/footer, motion, previews (done)
-2. Home
-3. Products & Services + 7 offer pages
-4. Contact + form pipeline
-5. `/opportunity` + QR redirects
-6. What We Do, About
-7. Labs: assessment, partner grid
-8. GA4 + consent, SEO, accessibility pass, real-phone testing
+The step-by-step checklist with status is in [docs/build-plan.md](docs/build-plan.md).
