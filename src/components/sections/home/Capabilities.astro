@@ -1,0 +1,30 @@
+---
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import { capabilities } from '@/data/home';
+---
+
+<section class="bg-white py-20 sm:py-28 lg:py-32" aria-labelledby="capabilities-heading">
+  <div class="container-site">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <RevealHeading
+        id="capabilities-heading"
+        lines={capabilities.lines}
+        class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep"
+      />
+      <a href={capabilities.cta.href} class="link-arrow reveal text-deep" data-reveal>
+        {capabilities.cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <!-- 1px gaps over a rule-coloured background give clean hairlines at every breakpoint -->
+    <ol class="mt-14 grid gap-px border-y border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
+      {capabilities.items.map((item, i) => (
+        <li class="reveal flex flex-col gap-5 bg-white py-8 sm:p-8 lg:py-10" data-reveal style={`--delay:${i * 90}ms`}>
+          <span class="heading text-sm tabular-nums text-current" aria-hidden="true">0{i + 1}</span>
+          <h3 class="heading text-xl text-midnight sm:text-[1.35rem]">{item.title}</h3>
+          <p class="text-slate">{item.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

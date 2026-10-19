@@ -1,0 +1,29 @@
+---
+// Deep Ocean closing call to action. Reused at the end of most pages.
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+
+interface Props {
+  lines: string[];
+  body?: string[];
+  cta: { label: string; href: string };
+}
+const { lines, body = [], cta } = Astro.props;
+---
+
+<section class="on-dark bg-deep text-white" aria-labelledby="closing-heading">
+  <div class="container-site grid gap-10 py-20 sm:py-28 lg:grid-cols-12 lg:items-end lg:py-32">
+    <RevealHeading
+      id="closing-heading"
+      lines={lines}
+      class="display text-[clamp(2.1rem,1.2rem+3.6vw,4.5rem)] lg:col-span-8"
+    />
+    <div class="flex flex-col items-start gap-8 lg:col-span-4">
+      {body.map((p, i) => (
+        <p class="reveal text-white/85" data-reveal style={`--delay:${i * 90}ms`}>{p}</p>
+      ))}
+      <a href={cta.href} class="btn btn-accent reveal" data-reveal style="--delay:200ms">
+        {cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>

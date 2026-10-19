@@ -1,0 +1,19 @@
+---
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import { opportunity } from '@/data/home';
+---
+
+<section class="py-20 sm:py-28 lg:py-36" aria-labelledby="opportunity-heading">
+  <div class="container-site grid gap-10 lg:grid-cols-12">
+    <RevealHeading
+      id="opportunity-heading"
+      lines={opportunity.lines}
+      class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep lg:col-span-7"
+    />
+    <div class="space-y-5 text-slate lg:col-span-5 lg:pt-3">
+      {opportunity.body.map((p, i) => (
+        <p class="reveal" data-reveal style={`--delay:${i * 100}ms`}>{p}</p>
+      ))}
+    </div>
+  </div>
+</section>

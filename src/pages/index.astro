@@ -1,38 +1,21 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/sections/Hero.astro';
-import RevealHeading from '@/components/motion/RevealHeading.astro';
-import FlowDivider from '@/components/motion/FlowDivider.astro';
-import InProgress from '@/components/sections/InProgress.astro';
+import Opportunity from '@/components/sections/home/Opportunity.astro';
+import Capabilities from '@/components/sections/home/Capabilities.astro';
+import Solutions from '@/components/sections/home/Solutions.astro';
+import Approach from '@/components/sections/home/Approach.astro';
+import Founder from '@/components/sections/home/Founder.astro';
+import ClosingCta from '@/components/sections/ClosingCta.astro';
+import { closing } from '@/data/home';
 ---
 
 <BaseLayout>
   <Hero />
-
-  <!-- Section 2 — The opportunity (copy from Nic's brief; full home page is step 2) -->
-  <section class="py-20 sm:py-28 lg:py-36">
-    <div class="container-site grid gap-10 lg:grid-cols-12">
-      <RevealHeading
-        lines={['Growth Begins With', 'Seeing What’s Possible.']}
-        class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep lg:col-span-7"
-      />
-      <div class="space-y-5 text-slate lg:col-span-5 lg:pt-3">
-        <p class="reveal" data-reveal>
-          Not every opportunity is obvious. Some emerge from an unmet customer need, a new market, a promising idea or a
-          relationship that has yet to be explored.
-        </p>
-        <p class="reveal" data-reveal style="--delay:100ms">
-          The challenge is recognising which opportunities are worth pursuing and determining how to turn them into
-          commercial value.
-        </p>
-        <p class="reveal" data-reveal style="--delay:200ms">
-          Blue Whale helps businesses identify those opportunities, develop the proposition and establish a practical
-          path forward.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <FlowDivider />
-  <InProgress step="step 2 (Home)" />
+  <Opportunity />
+  <Capabilities />
+  <Solutions />
+  <Approach />
+  <Founder />
+  <ClosingCta lines={closing.lines} body={closing.body} cta={closing.cta} />
 </BaseLayout>

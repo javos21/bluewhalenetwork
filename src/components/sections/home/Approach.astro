@@ -1,0 +1,30 @@
+---
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import FlowDivider from '@/components/motion/FlowDivider.astro';
+import { approach } from '@/data/home';
+---
+
+<section class="on-dark bg-midnight py-20 text-white sm:py-28 lg:py-32" aria-labelledby="approach-heading">
+  <div class="container-site">
+    <RevealHeading
+      id="approach-heading"
+      lines={approach.lines}
+      class="display text-[clamp(2.1rem,1.2rem+3.6vw,4.5rem)]"
+    />
+  </div>
+
+  <FlowDivider tone="dark" class="mt-14" />
+
+  <div class="container-site">
+    <ol class="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+      {approach.steps.map((step, i) => (
+        <li class="reveal" data-reveal style={`--delay:${i * 110}ms`}>
+          <span class="text-sm tabular-nums text-mist" aria-hidden="true">0{i + 1}</span>
+          <h3 class="display mt-3 text-[clamp(1.75rem,1.3rem+1.2vw,2.4rem)] text-aqua">{step.word}.</h3>
+          <p class="mt-4 max-w-xs text-white/75">{step.body}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-14 max-w-xl text-sm text-mist">{approach.note}</p>
+  </div>
+</section>

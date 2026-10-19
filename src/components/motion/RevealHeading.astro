@@ -10,11 +10,12 @@ interface Props {
   class?: string;
   /** Mark the last line with the accent colour */
   accentLast?: boolean;
+  id?: string;
 }
-const { as: Tag = 'h2', lines, class: className = '', accentLast = false } = Astro.props;
+const { as: Tag = 'h2', lines, class: className = '', accentLast = false, id } = Astro.props;
 ---
 
-<Tag class={`reveal-lines ${className}`} data-reveal aria-label={lines.join(' ')}>
+<Tag id={id} class={`reveal-lines ${className}`} data-reveal aria-label={lines.join(' ')}>
   {lines.map((line, i) => (
     <span class="line" aria-hidden="true" style={`--i:${i}`}>
       <span class:list={[accentLast && i === lines.length - 1 && 'accent-line']}>{line}</span>

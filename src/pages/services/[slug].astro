@@ -1,0 +1,28 @@
+---
+// Offer pages. Step 2 ships the brief's copy so links from Home work;
+// step 3 adds deliverables, duration/format, how it works and related offer.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import InProgress from '@/components/sections/InProgress.astro';
+import { offers, type Offer } from '@/data/offers';
+
+export function getStaticPaths() {
+  return offers.map((offer) => ({ params: { slug: offer.slug }, props: { offer } }));
+}
+
+const { offer } = Astro.props as { offer: Offer };
+const contactHref = `/contact?interest=${encodeURIComponent(offer.interest)}&offer=${offer.slug}`;
+---
+
+<BaseLayout title={offer.name} description={offer.summary}>
+  <PageIntro lines={[offer.name]} lede={offer.promise}>
+    <a href={contactHref} class="btn btn-accent reveal mt-10" data-reveal style="--delay:300ms">
+      {offer.cta}<span class="btn-arrow" aria-hidden="true">→</span>
+    </a>
+  </PageIntro>
+  <section class="container-site grid gap-8 py-16 sm:py-20 lg:grid-cols-12">
+    <p class="lede text-midnight/85 lg:col-span-7">{offer.intro}</p>
+    <p class="text-slate lg:col-span-4 lg:col-start-9"><strong class="text-midnight">Best suited for:</strong> {offer.bestFor}</p>
+  </section>
+  <InProgress step="step 3 (deliverables, format and how it works)" />
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import { founder } from '@/data/home';
+---
+
+<section class="py-20 sm:py-28 lg:py-32" aria-labelledby="founder-heading">
+  <div class="container-site grid gap-10 lg:grid-cols-12">
+    <RevealHeading
+      id="founder-heading"
+      lines={founder.lines}
+      class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep lg:col-span-5"
+    />
+    <div class="lg:col-span-6 lg:col-start-7 lg:pt-3">
+      <p class="lede reveal text-midnight/85" data-reveal>{founder.body}</p>
+      <a href={founder.cta.href} class="link-arrow reveal mt-8 text-deep" data-reveal style="--delay:120ms">
+        {founder.cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
