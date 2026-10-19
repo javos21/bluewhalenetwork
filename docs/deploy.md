@@ -10,7 +10,7 @@ The site is a pure static build (`dist/`), so any static host works.
    - Build command: `npm ci && npm run build:labs`
      (use `npm ci && npm run build` for a version without the proofs of concept)
    - Publish directory: `dist`
-3. Node version comes from `.node-version` (22.12.0).
+3. Node version comes from `.node-version` (22.22.0, the minimum Astro 7 supports).
 4. Do **not** set `PUBLIC_SITE_ENV`, so the test site stays `noindex`.
 
 Every push to `astro-rebuild` redeploys automatically. The URL looks like
@@ -32,7 +32,7 @@ isn't indexed either, so share it only with Nic.
 
    | Variable | Production | Preview |
    |---|---|---|
-   | `NODE_VERSION` | `22` | `22` |
+   | `NODE_VERSION` | `22.22.0` | `22.22.0` |
    | `PUBLIC_SITE_ENV` | `production` | *(unset)* |
    | `PUBLIC_SHOW_LABS` | *(unset)* | `true` |
 

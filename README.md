@@ -5,7 +5,7 @@ October 2026 website brief. Static Astro site, deployed on Cloudflare Pages.
 
 ## Run locally
 
-Node.js 22.12+.
+Node.js 22.22+ (Astro 7 requirement).
 
 ```sh
 npm ci
