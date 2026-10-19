@@ -1,18 +1,32 @@
 ---
+// Founder — portrait on an Aqua notched block, with the industries Nic
+// has worked across as chips (all from his bio in the brief).
 import RevealHeading from '@/components/motion/RevealHeading.astro';
+import PortraitFrame from '@/components/ui/PortraitFrame.astro';
+import Chip from '@/components/ui/Chip.astro';
 import { founder } from '@/data/home';
+
+const industries = ['Food & beverage', 'Banking', 'Events', 'Entertainment', 'Marketing'];
 ---
 
-<section class="py-20 sm:py-28 lg:py-32" aria-labelledby="founder-heading">
-  <div class="container-site grid gap-10 lg:grid-cols-12">
-    <RevealHeading
-      id="founder-heading"
-      lines={founder.lines}
-      class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep lg:col-span-5"
-    />
-    <div class="lg:col-span-6 lg:col-start-7 lg:pt-3">
-      <p class="lede reveal text-midnight/85" data-reveal>{founder.body}</p>
-      <a href={founder.cta.href} class="link-arrow reveal mt-8 text-deep" data-reveal style="--delay:120ms">
+<section class="on-dark overflow-hidden bg-midnight py-20 text-white sm:py-28 lg:py-32" aria-labelledby="founder-heading">
+  <div class="container-site grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+    <div class="relative mx-auto w-[min(80vw,22rem)] lg:col-span-5 lg:w-full lg:max-w-[26rem]">
+      <PortraitFrame id="founder" tone="aqua" notch="bl" />
+      <Chip icon="compass" label="Commercial strategist" class="absolute -right-2 top-[30%] sm:-right-10" delay={500} floatDelay={0.8} />
+    </div>
+
+    <div class="lg:col-span-6 lg:col-start-7">
+      <RevealHeading id="founder-heading" lines={founder.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
+      <p class="lede reveal mt-6 text-white/80" data-reveal style="--delay:150ms">{founder.body}</p>
+
+      <ul class="mt-8 flex flex-wrap gap-2.5" aria-label="Industries">
+        {industries.map((name, i) => (
+          <li class="pop rounded-full border border-white/15 bg-abyss px-4 py-2 text-sm text-white/85" data-reveal style={`--delay:${250 + i * 70}ms`}>{name}</li>
+        ))}
+      </ul>
+
+      <a href={founder.cta.href} class="btn btn-ghost-dark reveal mt-10" data-reveal style="--delay:300ms">
         {founder.cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
       </a>
     </div>

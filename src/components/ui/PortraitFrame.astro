@@ -1,0 +1,67 @@
+---
+// Cut-out portrait rising out of a coloured block with a notched corner,
+// the signature shape from the reference. Built as one SVG so the photo
+// is clipped to the exact shape at every size: the head may extend above
+// the block, while the sides and bottom (including the notch) cut cleanly.
+//
+// Swap the image in src/data/media.ts for Nic's real cut-out when it arrives.
+import { headshot } from '@/data/media';
+
+interface Props {
+  tone?: 'current' | 'aqua' | 'deep';
+  class?: string;
+  notch?: 'br' | 'bl';
+  id: string;
+}
+const { tone = 'current', class: className = '', notch = 'br', id } = Astro.props;
+
+const fill = { current: 'var(--color-current)', aqua: 'var(--color-aqua)', deep: 'var(--color-deep)' }[tone];
+
+// 400 × 480 block with a concave bite out of one bottom corner, drawn at y=80
+// inside a 400 × 560 canvas (the top 80 units are headroom for the portrait).
+const shape =
+  notch === 'br'
+    ? 'M24 80H376a24 24 0 0 1 24 24V452a28 28 0 0 1-28 28h-8a44 44 0 0 0-44 44v12a24 24 0 0 1-24 24H24A24 24 0 0 1 0 536V104A24 24 0 0 1 24 80Z'
+    : 'M24 80H376a24 24 0 0 1 24 24V536a24 24 0 0 1-24 24H104a24 24 0 0 1-24-24v-12a44 44 0 0 0-44-44H28A28 28 0 0 1 0 452V104A24 24 0 0 1 24 80Z';
+const clipId = `portrait-clip-${id}`;
+---
+
+<div class={`portrait relative ${className}`} data-reveal>
+  <svg viewBox="0 0 400 560" class="block h-auto w-full overflow-visible" role="img" aria-label={headshot.alt}>
+    <defs>
+      <clipPath id={clipId}>
+        <rect x="0" y="-40" width="400" height="160" />
+        <path d={shape} />
+      </clipPath>
+    </defs>
+    <path d={shape} fill={fill} />
+    <g clip-path={`url(#${clipId})`}>
+      <image
+        href={headshot.src}
+        x="20"
+        y="30"
+        width="360"
+        height="530"
+        preserveAspectRatio="xMidYMax meet"
+        class="portrait-img"
+      />
+    </g>
+  </svg>
+  <slot />
+</div>
+
+<style>
+  .portrait-img {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+  :global(.js-motion) .portrait:not(:global(.is-in)) .portrait-img {
+    transform: translateY(16%);
+    opacity: 0;
+  }
+  :global(.js-motion) .portrait .portrait-img {
+    transition:
+      transform 1000ms var(--ease-water) var(--delay, 150ms),
+      opacity 600ms var(--ease-water) var(--delay, 150ms);
+  }
+</style>

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import IntroOverlay from '@/components/sections/IntroOverlay.astro';
 import Hero from '@/components/sections/Hero.astro';
+import PartnerStrip from '@/components/labs/PartnerStrip.astro';
 import Opportunity from '@/components/sections/home/Opportunity.astro';
 import Capabilities from '@/components/sections/home/Capabilities.astro';
 import Solutions from '@/components/sections/home/Solutions.astro';
@@ -8,10 +10,13 @@ import Approach from '@/components/sections/home/Approach.astro';
 import Founder from '@/components/sections/home/Founder.astro';
 import ClosingCta from '@/components/sections/ClosingCta.astro';
 import { closing } from '@/data/home';
+import { showLabs } from '@/lib/env';
 ---
 
 <BaseLayout>
+  <IntroOverlay />
   <Hero />
+  {showLabs && <PartnerStrip />}
   <Opportunity />
   <Capabilities />
   <Solutions />

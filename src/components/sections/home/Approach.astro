@@ -1,30 +1,62 @@
 ---
+// Our Approach — four steps on a dashed track. A solid Aqua line fills the
+// track as the section scrolls past, and each step lights up as it is
+// reached (scroll-linked, no pinning).
 import RevealHeading from '@/components/motion/RevealHeading.astro';
-import FlowDivider from '@/components/motion/FlowDivider.astro';
 import { approach } from '@/data/home';
+
+const thresholds = [0.08, 0.34, 0.6, 0.86];
 ---
 
-<section class="on-dark bg-midnight py-20 text-white sm:py-28 lg:py-32" aria-labelledby="approach-heading">
+<section class="py-20 sm:py-28 lg:py-32" aria-labelledby="approach-heading">
   <div class="container-site">
-    <RevealHeading
-      id="approach-heading"
-      lines={approach.lines}
-      class="display text-[clamp(2.1rem,1.2rem+3.6vw,4.5rem)]"
-    />
-  </div>
+    <div class="flex flex-col items-center text-center">
+      <RevealHeading
+        id="approach-heading"
+        lines={approach.lines}
+        class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]"
+      />
+      <p class="reveal mt-4 text-lg text-slate" data-reveal>Identify. Develop. Connect. Advance.</p>
+    </div>
 
-  <FlowDivider tone="dark" class="mt-14" />
+    <div class="approach relative mt-16" data-progress>
+      <!-- Track: dashed base + solid fill driven by --progress -->
+      <div class="pointer-events-none absolute left-[1.05rem] top-0 h-full w-px border-l border-dashed border-slate/40 lg:left-0 lg:top-[1.05rem] lg:h-px lg:w-full lg:border-t lg:border-l-0" aria-hidden="true"></div>
+      <div class="track-fill pointer-events-none absolute left-[1.05rem] top-0 w-0.5 bg-aqua lg:left-0 lg:top-[1rem] lg:h-0.5" aria-hidden="true"></div>
 
-  <div class="container-site">
-    <ol class="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-      {approach.steps.map((step, i) => (
-        <li class="reveal" data-reveal style={`--delay:${i * 110}ms`}>
-          <span class="text-sm tabular-nums text-mist" aria-hidden="true">0{i + 1}</span>
-          <h3 class="display mt-3 text-[clamp(1.75rem,1.3rem+1.2vw,2.4rem)] text-aqua">{step.word}.</h3>
-          <p class="mt-4 max-w-xs text-white/75">{step.body}</p>
-        </li>
-      ))}
-    </ol>
-    <p class="mt-14 max-w-xl text-sm text-mist">{approach.note}</p>
+      <ol class="relative grid gap-12 lg:grid-cols-4 lg:gap-8">
+        {approach.steps.map((step, i) => (
+          <li class="step relative pl-14 lg:pl-0 lg:pt-14" data-step={thresholds[i]}>
+            <span class="step-dot absolute left-0 top-0 grid size-[2.1rem] place-items-center rounded-full border-2 border-slate/30 bg-paper text-sm font-semibold tabular-nums text-slate transition-all duration-500" aria-hidden="true">{i + 1}</span>
+            <h3 class="display text-[clamp(1.8rem,1.4rem+1.2vw,2.5rem)] text-unfilled transition-colors duration-500">{step.word}.</h3>
+            <p class="mt-3 max-w-xs text-slate">{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <p class="mt-16 text-center text-sm text-slate">{approach.note}</p>
   </div>
 </section>
+
+<style>
+  .track-fill {
+    height: calc(var(--progress, 1) * 100%);
+  }
+  @media (min-width: 64rem) {
+    .track-fill {
+      height: 2px;
+      width: calc(var(--progress, 1) * 100%);
+    }
+  }
+  /* Without scroll-linking (no JS / reduced motion) every step is shown lit */
+  :global(html:not(.js-motion)) .step h3,
+  .step:global(.is-passed) h3 { color: var(--color-midnight); }
+  :global(html:not(.js-motion)) .step-dot,
+  .step:global(.is-passed) .step-dot {
+    border-color: var(--color-aqua);
+    background: var(--color-aqua);
+    color: var(--color-midnight);
+    box-shadow: 0 0 0 6px rgb(119 207 241 / 0.25);
+  }
+</style>

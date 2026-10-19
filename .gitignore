@@ -7,3 +7,4 @@ output/playwright/
 .env
 .env.*
 .wrangler/
+!.env.labs

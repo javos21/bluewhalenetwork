@@ -1,0 +1,22 @@
+---
+// Floating UI chip (icon disc + label), placed around photos and shapes.
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  icon: IconName;
+  label: string;
+  class?: string;
+  delay?: number;
+  floatDelay?: number;
+}
+const { icon, label, class: className = '', delay = 0, floatDelay = 0 } = Astro.props;
+---
+
+<div
+  class={`chip pop float w-max max-w-[11rem] ${className}`}
+  data-reveal
+  style={`--delay:${delay}ms;--float-delay:${floatDelay}s`}
+>
+  <span class="chip-icon"><Icon name={icon} class="size-[1.1rem]" /></span>
+  <span class="text-[0.95rem]">{label}</span>
+</div>

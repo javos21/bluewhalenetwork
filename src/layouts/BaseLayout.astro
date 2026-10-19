@@ -41,7 +41,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         d.classList.add('js-motion');
         try {
-          if (sessionStorage.getItem('bw-intro-played') !== '1') d.classList.add('intro-pending');
+          if (location.pathname === '/' && sessionStorage.getItem('bw-intro-played') !== '1') d.classList.add('intro-pending');
         } catch (e) {}
       })();
     </script>

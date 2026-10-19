@@ -10,9 +10,10 @@ interface Props {
   /** Decorative by default; pass a label to expose it to assistive tech */
   label?: string;
   animate?: boolean;
+  [key: `data-${string}`]: unknown;
 }
 
-const { tone = 'brand', class: className = '', label, animate = false } = Astro.props;
+const { tone = 'brand', class: className = '', label, animate = false, ...rest } = Astro.props;
 
 const whaleFill = tone === 'light' ? '#ffffff' : 'var(--color-deep)';
 const toneFill = { current: 'var(--color-current)', aqua: 'var(--color-aqua)' } as const;
@@ -27,6 +28,7 @@ const toneFill = { current: 'var(--color-current)', aqua: 'var(--color-aqua)' } 
   aria-hidden={label ? undefined : 'true'}
   focusable="false"
   data-mark={animate ? 'hero' : undefined}
+  {...rest}
 >
   <g data-mark-bands>
     {markPaths.bands.map((band) => (

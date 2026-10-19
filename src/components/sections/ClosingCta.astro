@@ -1,6 +1,8 @@
 ---
-// Deep Ocean closing call to action. Reused at the end of most pages.
+// Closing call to action — a loud Aqua band (the reference's lime band)
+// with a rotating circular badge. Reused at the end of most pages.
 import RevealHeading from '@/components/motion/RevealHeading.astro';
+import { primaryCta } from '@/data/site';
 
 interface Props {
   lines: string[];
@@ -8,22 +10,33 @@ interface Props {
   cta: { label: string; href: string };
 }
 const { lines, body = [], cta } = Astro.props;
+const badgeText = `${primaryCta.label} · Start a Conversation · `;
 ---
 
-<section class="on-dark bg-deep text-white" aria-labelledby="closing-heading">
-  <div class="container-site grid gap-10 py-20 sm:py-28 lg:grid-cols-12 lg:items-end lg:py-32">
-    <RevealHeading
-      id="closing-heading"
-      lines={lines}
-      class="display text-[clamp(2.1rem,1.2rem+3.6vw,4.5rem)] lg:col-span-8"
-    />
-    <div class="flex flex-col items-start gap-8 lg:col-span-4">
-      {body.map((p, i) => (
-        <p class="reveal text-white/85" data-reveal style={`--delay:${i * 90}ms`}>{p}</p>
-      ))}
-      <a href={cta.href} class="btn btn-accent reveal" data-reveal style="--delay:200ms">
-        {cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
-      </a>
+<section class="bg-paper py-10 sm:py-14" aria-labelledby="closing-heading">
+  <div class="container-site">
+    <div class="relative grid gap-10 overflow-hidden rounded-[2rem] bg-aqua px-6 py-14 text-midnight sm:px-12 sm:py-16 lg:grid-cols-12 lg:items-center lg:px-16 lg:py-20">
+      <!-- Notch cut into the top edge, echoing the portrait blocks -->
+      <span class="absolute left-1/2 top-0 hidden h-10 w-28 -translate-x-1/2 rounded-b-[1.5rem] bg-paper lg:block" aria-hidden="true"></span>
+
+      <RevealHeading id="closing-heading" lines={lines} class="display text-[clamp(2.1rem,1.3rem+3vw,4rem)] lg:col-span-7" />
+
+      <div class="flex flex-col items-start gap-6 lg:col-span-5">
+        {body.map((p, i) => <p class="reveal text-midnight/80" data-reveal style={`--delay:${i * 90}ms`}>{p}</p>)}
+        <div class="reveal flex items-center gap-6" data-reveal style="--delay:200ms">
+          <a href={cta.href} class="btn btn-dark">{cta.label}<span class="btn-arrow" aria-hidden="true">→</span></a>
+          <a href={primaryCta.href} class="group relative hidden size-28 shrink-0 sm:block" aria-label={primaryCta.label}>
+            <svg viewBox="0 0 120 120" class="spin size-full" aria-hidden="true">
+              <defs><path id="badge-circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" /></defs>
+              <circle cx="60" cy="60" r="58" fill="var(--color-midnight)" />
+              <text font-size="10.5" font-weight="600" letter-spacing="2.2" fill="var(--color-aqua)">
+                <textPath href="#badge-circle">{badgeText.toUpperCase()}</textPath>
+              </text>
+            </svg>
+            <span class="absolute inset-0 grid place-items-center text-2xl text-white transition-transform duration-300 group-hover:rotate-45" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </section>

@@ -1,26 +1,28 @@
-@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/outfit';
 @import 'tailwindcss';
 
 /* ---------------------------------------------------------------
    Blue Whale Consulting — design tokens
-   Palette comes from the logo. Flat fills only, no gradients.
+   Palette comes from the logo; flat fills only. Structure and motion
+   are adapted from the Compally reference Javed chose (Oct 2026):
+   Aqua takes the role of its lime accent, Current Blue its violet.
    --------------------------------------------------------------- */
 @theme {
   --color-midnight: #00151b;   /* darkest surface, body text on light */
-  --color-abyss: #001f31;      /* raised dark surface */
+  --color-abyss: #0a2530;      /* raised dark surface (cards on midnight) */
   --color-deep: #03466e;       /* Deep Ocean — primary brand */
-  --color-current: #4a95cf;    /* Current Blue — secondary */
-  --color-aqua: #77cff1;       /* Aqua Mist — single accent on dark */
-  --color-paper: #f5f3ee;      /* warm light surface */
+  --color-current: #4a95cf;    /* Current Blue — shapes, secondary */
+  --color-aqua: #77cff1;       /* Aqua Mist — the single loud accent */
+  --color-paper: #f6f4ef;      /* warm light surface */
   --color-ice: #eaf2f5;        /* cool light surface */
   --color-slate: #4f6169;      /* secondary text on light */
   --color-mist: #a9bec7;       /* secondary text on dark */
-  --color-rule: #d9e1e4;       /* hairlines on light */
+  --color-rule: #dfe3e2;       /* hairlines on light */
+  --color-unfilled: #b9c3c6;   /* scroll-fill text before it fills */
 
-  --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
 
   --ease-water: cubic-bezier(0.22, 1, 0.36, 1);
-
   --container-site: 80rem;
 }
 
@@ -29,6 +31,7 @@
     color-scheme: light;
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    interpolate-size: allow-keywords;
   }
   body {
     background: var(--color-paper);
@@ -38,51 +41,41 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-  ::selection {
-    background: var(--color-aqua);
-    color: var(--color-midnight);
-  }
+  ::selection { background: var(--color-aqua); color: var(--color-midnight); }
   :focus-visible {
     outline: 2px solid var(--color-current);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 4px;
   }
-  .on-dark :focus-visible {
-    outline-color: var(--color-aqua);
-  }
+  .on-dark :focus-visible { outline-color: var(--color-aqua); }
 }
 
 /* ---------------------------------------------------------------
-   Typography
-   Display type is Archivo at its widest (125%) — echoes the wide,
-   geometric lettering of the Blue Whale wordmark.
+   Typography — Outfit, a free geometric sans close to the Gilroy-
+   style face in the reference.
    --------------------------------------------------------------- */
 @utility display {
-  font-stretch: 125%;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 0.98;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
   text-wrap: balance;
 }
 @utility heading {
-  font-stretch: 118%;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   text-wrap: balance;
 }
 @utility wordmark {
-  font-stretch: 125%;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 @utility lede {
-  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.3125rem);
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3rem);
   line-height: 1.55;
   text-wrap: pretty;
 }
-
 @utility container-site {
   width: 100%;
   max-width: var(--container-site);
@@ -90,8 +83,25 @@
   padding-inline: clamp(1.25rem, 4vw, 3rem);
 }
 
+/* Grid-paper texture used inside stat and feature cards */
+@utility grid-paper {
+  background-color: #fff;
+  background-image:
+    linear-gradient(var(--color-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-rule) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -1px -1px;
+}
+@utility grid-paper-dark {
+  background-color: var(--color-abyss);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
 /* ---------------------------------------------------------------
-   Buttons and links
+   Components
    --------------------------------------------------------------- */
 @layer components {
   .btn {
@@ -100,11 +110,9 @@
     justify-content: center;
     gap: 0.75rem;
     min-height: 3.25rem;
-    padding: 0 1.5rem;
-    border-radius: 6px;
-    font-weight: 650;
-    font-stretch: 110%;
-    letter-spacing: 0.005em;
+    padding: 0 1.6rem;
+    border-radius: 999px;
+    font-weight: 600;
     line-height: 1.1;
     transition:
       background-color 200ms var(--ease-water),
@@ -112,45 +120,27 @@
       border-color 200ms var(--ease-water),
       transform 200ms var(--ease-water);
   }
-  .btn:active { transform: translateY(1px); }
-  .btn-arrow {
-    display: inline-block;
-    transition: transform 250ms var(--ease-water);
-  }
+  .btn:active { transform: translateY(1px) scale(0.99); }
+  .btn-arrow { display: inline-block; transition: transform 250ms var(--ease-water); }
   .btn:hover .btn-arrow,
   .link-arrow:hover .btn-arrow { transform: translateX(4px); }
 
-  /* Primary on dark: Aqua Mist with midnight text */
-  .btn-accent {
-    background: var(--color-aqua);
-    color: var(--color-midnight);
-  }
+  .btn-accent { background: var(--color-aqua); color: var(--color-midnight); }
   .btn-accent:hover { background: #a7e0f5; }
-
-  /* Primary on light: Deep Ocean */
-  .btn-primary {
-    background: var(--color-deep);
-    color: #fff;
-  }
+  .btn-primary { background: var(--color-deep); color: #fff; }
   .btn-primary:hover { background: #023652; }
-
-  .btn-ghost-dark {
-    border: 1px solid rgb(255 255 255 / 0.28);
-    color: #fff;
-  }
+  .btn-dark { background: var(--color-midnight); color: #fff; }
+  .btn-dark:hover { background: var(--color-deep); }
+  .btn-ghost-dark { border: 1px solid rgb(255 255 255 / 0.28); color: #fff; }
   .btn-ghost-dark:hover { border-color: var(--color-aqua); color: var(--color-aqua); }
-
-  .btn-ghost {
-    border: 1px solid var(--color-rule);
-    color: var(--color-deep);
-  }
+  .btn-ghost { border: 1px solid var(--color-rule); color: var(--color-deep); }
   .btn-ghost:hover { border-color: var(--color-current); background: #fff; }
 
   .link-arrow {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 650;
+    font-weight: 600;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.3em;
@@ -158,58 +148,126 @@
     transition: text-decoration-color 200ms var(--ease-water);
   }
   .link-arrow:hover { text-decoration-color: currentColor; }
+
+  /* Floating UI chip: small white card with an icon disc and a label */
+  .chip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem 1rem;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--color-midnight);
+    box-shadow: 0 14px 40px rgb(0 21 27 / 0.18);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .chip-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    background: var(--color-deep);
+    color: var(--color-aqua);
+  }
+
+  /* Connector dot: Aqua core with a soft ring */
+  .dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    background: var(--color-aqua);
+    box-shadow: 0 0 0 5px rgb(119 207 241 / 0.22);
+  }
+
+  /* Highlight block behind a phrase (the reference's lime box) */
+  .highlight {
+    position: relative;
+    display: inline-block;
+    padding: 0 0.18em 0.04em;
+    color: var(--color-midnight);
+    isolation: isolate;
+  }
+  .highlight::before {
+    content: '';
+    position: absolute;
+    inset: 0.04em 0 -0.02em;
+    z-index: -1;
+    background: var(--color-aqua);
+    transform-origin: left center;
+  }
 }
 
 /* ---------------------------------------------------------------
-   Motion — see docs/motion.md
-   Everything here is progressive: without JS or with reduced motion,
-   content is simply visible.
+   Motion. Progressive: with no JS or reduced motion, everything is
+   simply visible. `.js-motion` on <html> arms the start states.
    --------------------------------------------------------------- */
 
-/* Masked headline reveal: each .line rises out of its own clip. */
+/* Masked line reveal */
 .reveal-lines .line {
   display: block;
   overflow: hidden;
-  /* room for descenders so the clip doesn't crop them */
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
 }
 .reveal-lines .line > span { display: block; }
-
-.js-motion .reveal-lines:not(.is-in) .line > span {
-  transform: translateY(105%);
-}
+.js-motion .reveal-lines:not(.is-in) .line > span { transform: translateY(105%); }
 .js-motion .reveal-lines .line > span {
-  transition: transform 700ms var(--ease-water);
+  transition: transform 750ms var(--ease-water);
   transition-delay: calc(var(--i, 0) * 90ms);
 }
-
-/* Hero mark stays hidden until the intro timeline takes over. The
-   failsafe shows it anyway if the script never runs. */
-.intro-pending [data-mark='hero'] {
-  visibility: hidden;
-  animation: bw-failsafe 0s 2.5s forwards;
+/* The highlight sweeps in after its line has risen */
+.js-motion .reveal-lines:not(.is-in) .highlight::before { transform: scaleX(0); }
+.js-motion .reveal-lines .highlight::before {
+  transition: transform 700ms var(--ease-water) calc(var(--i, 0) * 90ms + 380ms);
 }
-@keyframes bw-failsafe { to { visibility: visible; } }
 
-/* Simple fade-up for supporting copy */
-.js-motion .reveal:not(.is-in) {
-  opacity: 0;
-  transform: translateY(14px);
-}
+/* Fade-up */
+.js-motion .reveal:not(.is-in) { opacity: 0; transform: translateY(16px); }
 .js-motion .reveal {
-  transition:
-    opacity 700ms var(--ease-water),
-    transform 700ms var(--ease-water);
+  transition: opacity 700ms var(--ease-water), transform 700ms var(--ease-water);
   transition-delay: var(--delay, 0ms);
 }
 
-/* Flow-line divider: strokes draw themselves when scrolled to. */
-.flow-divider path {
-  fill: none;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+/* Pop-in for chips and cards */
+.js-motion .pop:not(.is-in) { opacity: 0; transform: translateY(12px) scale(0.92); }
+.js-motion .pop {
+  transition: opacity 500ms var(--ease-water), transform 650ms var(--ease-water);
+  transition-delay: var(--delay, 0ms);
 }
+
+/* Dashed connectors draw by unclipping left→right (or top→bottom) */
+.js-motion .draw:not(.is-in) { clip-path: inset(0 100% 0 0); }
+.js-motion .draw-y:not(.is-in) { clip-path: inset(0 0 100% 0); }
+.js-motion .draw,
+.js-motion .draw-y {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1100ms var(--ease-water);
+  transition-delay: var(--delay, 0ms);
+}
+
+/* Gentle float for chips after they arrive */
+@keyframes float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6px; }
+}
+.js-motion .float.is-in { animation: float 6s ease-in-out infinite; animation-delay: var(--float-delay, 0s); }
+
+/* Rotating badge */
+@keyframes spin { to { rotate: 360deg; } }
+.spin { animation: spin 16s linear infinite; }
+
+/* Scroll-filled text: words switch from --color-unfilled to ink as the
+   paragraph moves through the viewport (driven by motion.ts). */
+.js-motion [data-scroll-fill] .w {
+  color: var(--color-unfilled);
+  transition: color 250ms linear;
+}
+.js-motion [data-scroll-fill] .w.on { color: inherit; }
+
+/* Flow-line divider */
+.flow-divider path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .js-motion .flow-divider path {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -219,23 +277,40 @@
 .js-motion .flow-divider path:nth-child(3) { transition-delay: 240ms; }
 .js-motion .flow-divider.is-in path { stroke-dashoffset: 0; }
 
-/* Cards: borders sharpen, slight lift */
+/* Parallax layers are moved by motion.ts via --py */
+[data-parallax] { translate: 0 var(--py, 0px); will-change: translate; }
+
+/* Cards */
 .card-hover {
   transition:
     border-color 250ms var(--ease-water),
     transform 300ms var(--ease-water),
-    background-color 250ms var(--ease-water);
+    background-color 250ms var(--ease-water),
+    box-shadow 300ms var(--ease-water);
 }
-.card-hover:hover { transform: translateY(-3px); }
+.card-hover:hover { transform: translateY(-4px); }
 
-/* Page transitions (Astro ClientRouter) — a short cross-fade with a
-   small rise on the incoming page. */
-::view-transition-old(root) {
-  animation: 220ms var(--ease-water) both vt-out;
+/* Accordion (native <details>) — animate the open height where supported */
+.accordion details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 450ms var(--ease-water), content-visibility 450ms allow-discrete;
 }
-::view-transition-new(root) {
-  animation: 420ms var(--ease-water) both vt-in;
-}
+.accordion details[open]::details-content { block-size: auto; }
+.accordion summary { list-style: none; cursor: pointer; }
+.accordion summary::-webkit-details-marker { display: none; }
+
+/* Intro overlay (first visit per session) */
+.intro-overlay { display: none; }
+.intro-pending .intro-overlay { display: grid; }
+.intro-pending [data-header-mark] { visibility: hidden; }
+/* Failsafe: never leave the overlay up if the script fails */
+.intro-pending .intro-overlay { animation: intro-failsafe 0s 3s forwards; }
+@keyframes intro-failsafe { to { visibility: hidden; } }
+
+/* Page transitions (Astro ClientRouter) */
+::view-transition-old(root) { animation: 220ms var(--ease-water) both vt-out; }
+::view-transition-new(root) { animation: 420ms var(--ease-water) both vt-in; }
 @keyframes vt-out { to { opacity: 0; } }
 @keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
 
@@ -243,8 +318,10 @@
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
+  [data-parallax] { translate: none; }
 }

@@ -1,76 +1,98 @@
-// Signature moment: the logo's flow bands draw in left to right, the whale
-// settles into place, then the headline lines rise in.
+// Home intro.
 //
-// Plays in full once per browser session (~1.5s). Later visits in the same
-// session skip the mark animation and use the quick CSS reveal only.
-// Reduced-motion visitors see the finished state with no animation.
-import { gsap } from 'gsap';
+// First visit in a browser session: a short logo moment. The mark's flow
+// bands draw in on a midnight overlay, then the mark flies into its place
+// in the header as the overlay lifts, and the hero builds piece by piece.
+// About 1.6s in total.
+//
+// Later visits skip the overlay and the hero builds straight away.
+// Reduced motion shows the finished page immediately.
+//
+// Uses the Web Animations API only, with no animation library.
 
 const SESSION_KEY = 'bw-intro-played';
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
-function hasPlayed(): boolean {
-  try {
-    return sessionStorage.getItem(SESSION_KEY) === '1';
-  } catch {
-    return false;
-  }
-}
 function markPlayed() {
   try {
     sessionStorage.setItem(SESSION_KEY, '1');
   } catch {
-    /* private mode etc. — replaying is harmless */
+    /* private mode — replaying is harmless */
   }
 }
 
-let timeline: gsap.core.Timeline | undefined;
+function buildHero(hero: HTMLElement) {
+  hero.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => el.classList.add('is-in'));
+}
 
-export function initHeroIntro() {
-  timeline?.kill();
+async function playOverlay(overlay: HTMLElement): Promise<void> {
+  const mark = overlay.querySelector<SVGSVGElement>('svg');
+  const target = document.querySelector<SVGSVGElement>('[data-header-mark]');
+  if (!mark || !target) return;
+
+  const bands = mark.querySelectorAll<SVGElement>('[data-mark-band]');
+  const whale = mark.querySelector<SVGElement>('[data-mark-whale]');
+
+  // 1. Bands draw left to right, the whale settles.
+  const drawn = [...bands].map((band, i) =>
+    band.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], {
+      duration: 750,
+      delay: i * 70,
+      easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+      fill: 'both',
+    }).finished,
+  );
+  const whaleIn = whale?.animate(
+    [
+      { opacity: 0, transform: 'translate(-24px, 6px)' },
+      { opacity: 1, transform: 'translate(0, 0)' },
+    ],
+    { duration: 700, delay: 250, easing: EASE, fill: 'both' },
+  ).finished;
+  await Promise.all([...drawn, whaleIn]);
+
+  // 2. Fly the mark into the header logo's position while the overlay lifts.
+  const from = mark.getBoundingClientRect();
+  const to = target.getBoundingClientRect();
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+  const scale = to.width / from.width;
+
+  const fly = mark.animate(
+    [{ transform: 'none' }, { transform: `translate(${dx}px, ${dy}px) scale(${scale})` }],
+    { duration: 650, delay: 120, easing: EASE, fill: 'forwards' },
+  ).finished;
+  const lift = overlay.animate([{ backgroundColor: '#00151b' }, { backgroundColor: 'rgb(0 21 27 / 0)' }], {
+    duration: 600,
+    delay: 160,
+    easing: EASE,
+    fill: 'forwards',
+  }).finished;
+  await Promise.all([fly, lift]);
+}
+
+export async function initHeroIntro() {
+  const root = document.documentElement;
   const hero = document.querySelector<HTMLElement>('[data-hero]');
-  if (!hero) return;
-
-  const reveals = hero.querySelectorAll<HTMLElement>('[data-reveal]');
-  const showText = () => reveals.forEach((el) => el.classList.add('is-in'));
-
+  const overlay = document.querySelector<HTMLElement>('[data-intro-overlay]');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const mark = hero.querySelector<SVGSVGElement>('[data-mark="hero"]');
 
-  if (reduce || !mark) {
-    document.documentElement.classList.remove('intro-pending');
-    showText();
+  const finish = () => {
+    root.classList.remove('intro-pending');
+    if (hero) buildHero(hero);
+  };
+
+  if (!hero) return finish();
+  if (reduce || !overlay || !root.classList.contains('intro-pending')) {
+    root.classList.remove('intro-pending');
+    requestAnimationFrame(() => buildHero(hero));
     return;
   }
-  if (hasPlayed()) {
-    document.documentElement.classList.remove('intro-pending');
-    // Let the CSS reveal run on the next frame so the transition is visible.
-    requestAnimationFrame(showText);
-    return;
+
+  try {
+    await playOverlay(overlay);
+  } finally {
+    markPlayed();
+    finish();
   }
-
-  const bands = mark.querySelectorAll('[data-mark-band]');
-  const whale = mark.querySelector('[data-mark-whale]');
-
-  timeline = gsap.timeline({
-    defaults: { ease: 'expo.out' },
-    onComplete: markPlayed,
-  });
-
-  timeline
-    .set(bands, { clipPath: 'inset(0 100% 0 0)' })
-    .set(whale, { autoAlpha: 0 })
-    .call(() => document.documentElement.classList.remove('intro-pending'))
-    .fromTo(
-      bands,
-      { clipPath: 'inset(0 100% 0 0)' },
-      { clipPath: 'inset(0 0% 0 0)', duration: 1.1, stagger: 0.09, ease: 'power3.inOut' },
-      0,
-    )
-    .fromTo(
-      whale,
-      { autoAlpha: 0, x: -28, y: 6 },
-      { autoAlpha: 1, x: 0, y: 0, duration: 1.0 },
-      0.35,
-    )
-    .call(showText, undefined, 0.55);
 }

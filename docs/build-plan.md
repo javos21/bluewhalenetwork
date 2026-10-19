@@ -11,7 +11,7 @@ Status key: ✅ done · 🔄 in progress · ⬜ not started · ⏸ blocked on Ni
 ## 1. Site shell ✅
 
 - ✅ Astro static site with pinned dependencies
-- ✅ Design tokens from the logo, Archivo Expanded headlines, dark hero
+- ✅ Design tokens from the logo, headline typeface (since changed to Outfit in 2b), dark hero
 - ✅ Header with the Discuss an Opportunity button (stays visible on mobile), mobile menu, footer
 - ✅ Motion: logo draw-in, masked headline reveals, flow-line dividers, page transitions, hover states
 - ✅ Reduced-motion support and a no-JS fallback
@@ -21,12 +21,15 @@ Status key: ✅ done · 🔄 in progress · ⬜ not started · ⏸ blocked on Ni
 
 **Done when:** every nav link loads a page, and a preview link can be shared.
 
-## 2. Home ✅ (design pass pending)
+## 2. Home ✅
 
 - ✅ Hero, The Opportunity, What We Do, Our Solutions, Our Approach, Founder, Closing CTA
 - ✅ Shared offer data for all seven offers
 - ✅ Copy edits logged for Nic
-- 🔄 **2b. Visual depth pass**: the site currently reads as flat. Fix this before step 3, so the offer pages inherit the improved look.
+- ✅ **2b. Visual depth pass** (Compally reference): Outfit typeface, cut-out portrait hero with chips and connectors, scroll-fill statement, capabilities accordion, dark offer cards, scroll-linked approach track, founder section, Aqua closing band
+- ✅ Labs proofs of concept on Home: partner strip and stats band
+- 🔄 Javed's review of the depth pass
+- ⏸ Nic's real headshot (stock stand-in for now)
 
 **Done when:** a visitor can answer "what does Blue Whale do?" in the first screen, and Javed signs off on the look.
 
@@ -104,3 +107,5 @@ The questions were sent 19 Oct 2026:
 9. Analytics consent approach
 10. GA4 property
 11. Location and target market
+12. A headshot of Nic, plus 2–3 working shots
+13. Real figures for the stats band (years, opportunities assessed, partnerships)

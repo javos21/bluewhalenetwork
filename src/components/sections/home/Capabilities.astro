@@ -1,30 +1,91 @@
 ---
+// What We Do — accordion of the four capabilities beside a Deep Ocean
+// panel that follows the open row (the reference's "How can we help you?").
+// On small screens the panel content lives inside each row.
 import RevealHeading from '@/components/motion/RevealHeading.astro';
+import Icon from '@/components/ui/Icon.astro';
 import { capabilities } from '@/data/home';
+import { capabilityList } from '@/data/capabilities';
+import { primaryCta } from '@/data/site';
 ---
 
 <section class="bg-white py-20 sm:py-28 lg:py-32" aria-labelledby="capabilities-heading">
   <div class="container-site">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-      <RevealHeading
-        id="capabilities-heading"
-        lines={capabilities.lines}
-        class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep"
-      />
+    <div class="flex flex-col items-center gap-5 text-center">
+      <RevealHeading id="capabilities-heading" lines={['What We Do']} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
       <a href={capabilities.cta.href} class="link-arrow reveal text-deep" data-reveal>
         {capabilities.cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
       </a>
     </div>
 
-    <!-- 1px gaps over a rule-coloured background give clean hairlines at every breakpoint -->
-    <ol class="mt-14 grid gap-px border-y border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-      {capabilities.items.map((item, i) => (
-        <li class="reveal flex flex-col gap-5 bg-white py-8 sm:p-8 lg:py-10" data-reveal style={`--delay:${i * 90}ms`}>
-          <span class="heading text-sm tabular-nums text-current" aria-hidden="true">0{i + 1}</span>
-          <h3 class="heading text-xl text-midnight sm:text-[1.35rem]">{item.title}</h3>
-          <p class="text-slate">{item.body}</p>
-        </li>
-      ))}
-    </ol>
+    <div class="mt-14 grid gap-6 lg:grid-cols-12 lg:gap-8" data-capabilities>
+      <div class="accordion flex flex-col gap-3 lg:col-span-6">
+        {capabilityList.map((cap, i) => (
+          <details
+            name="capabilities"
+            open={i === 0}
+            class="reveal group rounded-2xl border border-rule bg-paper transition-colors duration-300 open:border-transparent open:bg-white open:shadow-[0_18px_50px_rgb(0_21_27/0.10)]"
+            data-reveal
+            data-cap={cap.slug}
+            style={`--delay:${i * 80}ms`}
+          >
+            <summary class="flex items-center gap-4 px-5 py-5 sm:px-7 sm:py-6">
+              <span class="chip-icon shrink-0 transition-colors group-open:bg-aqua group-open:text-midnight"><Icon name={cap.icon} class="size-[1.1rem]" /></span>
+              <span class="heading flex-1 text-lg sm:text-xl">{cap.title}</span>
+              <span class="grid size-9 shrink-0 place-items-center rounded-full border border-rule text-deep transition-transform duration-300 group-open:rotate-45 group-open:border-deep" aria-hidden="true">
+                <Icon name="plus" class="size-4" />
+              </span>
+            </summary>
+            <div class="px-5 pb-6 sm:px-7 sm:pl-[4.6rem]">
+              <p class="text-slate">{cap.short}</p>
+              <!-- Mobile/tablet: the detail list sits inside the row -->
+              <ul class="mt-4 grid gap-2 text-sm text-midnight lg:hidden">
+                {cap.areas.map((a) => <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-current"></span>{a}</li>)}
+              </ul>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <!-- Desktop panel follows the open row -->
+      <div class="reveal relative hidden overflow-hidden rounded-[1.75rem] bg-deep p-10 text-white lg:col-span-6 lg:block" data-reveal style="--delay:200ms" aria-live="polite">
+        <svg viewBox="0 0 400 200" class="pointer-events-none absolute -right-16 -bottom-10 w-[28rem] opacity-25" aria-hidden="true">
+          <path d="M0 150 C80 150 120 90 200 90 S320 140 400 120" fill="none" stroke="var(--color-aqua)" stroke-width="2" stroke-dasharray="6 8" />
+          <path d="M0 175 C90 175 130 120 210 120 S330 165 400 150" fill="none" stroke="var(--color-current)" stroke-width="2" stroke-dasharray="6 8" />
+        </svg>
+        {capabilityList.map((cap, i) => (
+          <div class="cap-panel relative" data-panel={cap.slug} hidden={i !== 0}>
+            <span class="chip-icon bg-aqua text-midnight"><Icon name={cap.icon} class="size-[1.1rem]" /></span>
+            <h3 class="display mt-8 text-4xl">{cap.title}</h3>
+            <p class="mt-3 text-lg text-aqua">{cap.promise}</p>
+            <p class="mt-5 max-w-md text-white/80">{cap.body}</p>
+            <p class="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-mist">Areas of work</p>
+            <ul class="mt-4 grid gap-2.5">
+              {cap.areas.map((a) => <li class="flex gap-3 text-white/90"><span class="mt-2.5 size-1.5 shrink-0 rounded-full bg-aqua"></span>{a}</li>)}
+            </ul>
+            <a href={`${primaryCta.href}`} class="btn btn-accent mt-10">{cap.cta}<span class="btn-arrow" aria-hidden="true">→</span></a>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+  function initCapabilities() {
+    const root = document.querySelector('[data-capabilities]');
+    if (!root) return;
+    const panels = root.querySelectorAll<HTMLElement>('[data-panel]');
+    root.querySelectorAll<HTMLDetailsElement>('details[data-cap]').forEach((d) => {
+      d.addEventListener('toggle', () => {
+        if (!d.open) return;
+        panels.forEach((p) => {
+          const show = p.dataset.panel === d.dataset.cap;
+          p.hidden = !show;
+          if (show) p.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 400, easing: 'cubic-bezier(0.22,1,0.36,1)' });
+        });
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', initCapabilities);
+</script>

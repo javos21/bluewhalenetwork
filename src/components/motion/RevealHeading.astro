@@ -1,24 +1,30 @@
 ---
-// Headline whose lines rise out of a mask when scrolled into view.
-// Pass `lines` so line breaks are deliberate and identical at every
-// width the design is set for; on narrow screens long lines still wrap
-// inside their own mask.
+// Headline whose lines rise out of a mask when revealed. Pass `lines` so
+// breaks are deliberate; long lines still wrap inside their own mask on
+// narrow screens.
+//
+// highlightLast: the last line sits on an Aqua block that sweeps in after
+//                the line has risen (the reference's highlight box).
+// accentLast:    the last line is coloured Aqua instead.
 type Tag = 'h1' | 'h2' | 'h3' | 'p';
 interface Props {
   as?: Tag;
   lines: string[];
   class?: string;
-  /** Mark the last line with the accent colour */
   accentLast?: boolean;
+  highlightLast?: boolean;
   id?: string;
 }
-const { as: Tag = 'h2', lines, class: className = '', accentLast = false, id } = Astro.props;
+const { as: Tag = 'h2', lines, class: className = '', accentLast = false, highlightLast = false, id } = Astro.props;
+const last = lines.length - 1;
 ---
 
 <Tag id={id} class={`reveal-lines ${className}`} data-reveal aria-label={lines.join(' ')}>
   {lines.map((line, i) => (
     <span class="line" aria-hidden="true" style={`--i:${i}`}>
-      <span class:list={[accentLast && i === lines.length - 1 && 'accent-line']}>{line}</span>
+      <span class:list={[accentLast && i === last && 'text-aqua']}>
+        {highlightLast && i === last ? <span class="highlight">{line}</span> : line}
+      </span>
     </span>
   ))}
 </Tag>

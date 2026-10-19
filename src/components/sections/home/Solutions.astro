@@ -1,33 +1,49 @@
 ---
+// Our Solutions — dark section with three entry-point cards. Each card's
+// icon sits in a dashed frame that lights up on hover; a dashed connector
+// drops in from the section above.
 import RevealHeading from '@/components/motion/RevealHeading.astro';
+import Icon, { type IconName } from '@/components/ui/Icon.astro';
 import { solutions } from '@/data/home';
 import { featuredOfferSlugs, offerBySlug, offerHref } from '@/data/offers';
 
+const icons: Record<string, IconName> = {
+  'growth-strategy': 'chart',
+  'pod-sprint': 'spark',
+  'continuity-check': 'check',
+};
 const featured = featuredOfferSlugs.map((slug) => offerBySlug(slug)!);
 ---
 
-<section class="bg-ice py-20 sm:py-28 lg:py-32" aria-labelledby="solutions-heading">
+<section class="on-dark relative bg-midnight py-20 text-white sm:py-28 lg:py-32" aria-labelledby="solutions-heading">
+  <svg class="draw-y absolute left-1/2 top-0 hidden h-24 w-px overflow-visible lg:block" data-reveal aria-hidden="true">
+    <line x1="0" y1="0" x2="0" y2="96" stroke="rgb(255 255 255 / 0.25)" stroke-dasharray="5 7" />
+  </svg>
+
   <div class="container-site">
     <div class="grid gap-8 lg:grid-cols-12">
       <RevealHeading
         id="solutions-heading"
         lines={solutions.lines}
-        class="heading text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] text-deep lg:col-span-7"
+        class="display text-[clamp(2.1rem,1.3rem+2.8vw,3.75rem)] lg:col-span-7"
       />
-      <p class="reveal text-slate lg:col-span-5 lg:pt-3" data-reveal>{solutions.intro}</p>
+      <p class="reveal text-white/70 lg:col-span-4 lg:col-start-9 lg:pt-3" data-reveal>{solutions.intro}</p>
     </div>
 
-    <ul class="mt-14 grid gap-4 md:grid-cols-3 md:gap-5">
+    <ul class="mt-14 grid gap-5 md:grid-cols-3">
       {featured.map((offer, i) => (
-        <li class="reveal" data-reveal style={`--delay:${i * 90}ms`}>
-          <article class="card-hover group relative flex h-full flex-col rounded-xl border border-rule bg-white p-7 hover:border-current sm:p-8">
-            <h3 class="heading text-2xl text-midnight">
-              <a href={offerHref(offer.slug)} class="after:absolute after:inset-0 after:rounded-xl focus-visible:outline-none">
-                {offer.name}
-              </a>
+        <li class="reveal" data-reveal style={`--delay:${i * 110}ms`}>
+          <article class="card-hover group relative flex h-full flex-col rounded-2xl bg-abyss p-5 hover:bg-[#0e2d39] sm:p-6">
+            <div class="grid aspect-[4/3] place-items-center rounded-xl border border-dashed border-white/20 transition-colors duration-300 group-hover:border-aqua">
+              <span class="grid size-20 place-items-center rounded-full bg-deep text-aqua transition-transform duration-500 ease-[var(--ease-water)] group-hover:scale-110">
+                <Icon name={icons[offer.slug]} class="size-9" />
+              </span>
+            </div>
+            <h3 class="heading mt-6 text-2xl">
+              <a href={offerHref(offer.slug)} class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none">{offer.name}</a>
             </h3>
-            <p class="mt-4 flex-1 text-slate">{offer.summary}</p>
-            <span class="link-arrow mt-8 text-deep group-hover:[text-decoration-color:currentColor]" aria-hidden="true">
+            <p class="mt-3 flex-1 text-white/65">{offer.summary}</p>
+            <span class="link-arrow mt-6 text-aqua" aria-hidden="true">
               {solutions.cardCta[offer.slug] ?? offer.cta}<span class="btn-arrow group-hover:translate-x-1">→</span>
             </span>
           </article>
@@ -35,16 +51,17 @@ const featured = featuredOfferSlugs.map((slug) => offerBySlug(slug)!);
       ))}
     </ul>
 
-    <a href={solutions.allLink.href} class="link-arrow reveal mt-10 text-deep" data-reveal>
-      {solutions.allLink.label}<span class="btn-arrow" aria-hidden="true">→</span>
-    </a>
+    <div class="mt-10 flex justify-center">
+      <a href={solutions.allLink.href} class="btn btn-ghost-dark reveal" data-reveal>
+        {solutions.allLink.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
 <style>
-  /* Keyboard focus lands on the stretched link; draw the ring on the card. */
   article:has(a:focus-visible) {
-    outline: 2px solid var(--color-current);
+    outline: 2px solid var(--color-aqua);
     outline-offset: 3px;
   }
 </style>

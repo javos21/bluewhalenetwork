@@ -1,0 +1,9 @@
+---
+// First-visit logo moment for Home (see src/scripts/hero-intro.ts).
+// Only displayed while <html> has .intro-pending.
+import Mark from '@/components/brand/Mark.astro';
+---
+
+<div class="intro-overlay fixed inset-0 z-[70] place-items-center bg-midnight" data-intro-overlay aria-hidden="true">
+  <Mark tone="light" class="w-40 overflow-visible sm:w-52 [&_[data-mark-band]]:[clip-path:inset(0_100%_0_0)] [&_[data-mark-whale]]:opacity-0" />
+</div>
