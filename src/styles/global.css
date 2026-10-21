@@ -351,7 +351,9 @@
   pointer-events: none;
   will-change: transform;
 }
-.whale-live .traveler.is-following { position: fixed; z-index: 1; }
+.whale-live .traveler.is-following { position: absolute; z-index: 1; }
+/* The whale can swim in from off-screen; never let that widen the page. */
+.journey { position: relative; overflow-x: clip; }
 .traveler-facing { transform-origin: 50% 50%; }
 .traveler-pitch { position: relative; transform-origin: 55% 60%; }
 .whale-trails {
@@ -411,8 +413,10 @@
 
 .dive-panel { padding-block: clamp(2.5rem, 7vh, 5rem) clamp(4.5rem, 9vh, 7rem); }
 .dive-grid { display: grid; gap: 1.5rem; }
+/* Text and logos sit above the whale, as in every other section */
+.dive-copy { position: relative; z-index: 2; }
 .dive-panel .water { order: -1; }
-.dive-panel .whale-anchor { width: min(46vw, 15rem); aspect-ratio: 450 / 270; margin-left: auto; }
+.dive-panel .whale-anchor { width: min(42vw, 14rem); aspect-ratio: 450 / 270; margin-left: auto; margin-bottom: 0.75rem; }
 @media (min-width: 64rem) {
   .dive-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem; align-items: center; height: 100%; }
   .dive-copy { grid-column: 1 / span 7; }

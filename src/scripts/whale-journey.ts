@@ -15,6 +15,9 @@
 //    whaleChoreography.ts (cross, then dip and turn to face the content).
 //    It swims along the Approach track and spouts at the surface.
 //
+// After the dive the whale is positioned in document space inside
+// [data-journey], so on phones it scrolls natively with the content.
+//
 // Reduced motion and no-JS visitors get still whales in every resting
 // point instead (.whale-static). Everything is torn down before Astro
 // swaps pages.
@@ -92,6 +95,12 @@ function runJourney(world: HTMLElement, mobile: boolean) {
   const splash = q<SVGSVGElement>('[data-splash]');
   const waveLayers = hero.querySelectorAll<SVGPathElement>('.ocean-layer');
   const clientsEls = panel.querySelectorAll<HTMLElement>('[data-client]');
+  // After the dive the whale lives in the page itself (absolute, in
+  // document space) rather than fixed to the screen. On phones the page
+  // scrolls on the compositor, ahead of script; a fixed whale moved by
+  // script lags and slides over the content. In document space it scrolls
+  // natively with whatever it rests beside.
+  const journeyEl = world.closest<HTMLElement>('[data-journey]') ?? document.body;
 
   root.classList.add('whale-live');
   world.classList.add('is-scroll-scene');
@@ -317,7 +326,7 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     if (!following) {
       following = true;
       trigger.getTween()?.progress(1);
-      document.body.append(traveler);
+      journeyEl.append(traveler);
       traveler.classList.add('is-following');
       gsap.set(traveler, { left: 0, top: 0 });
       restFacingNow = 180;
@@ -394,7 +403,10 @@ function runJourney(world: HTMLElement, mobile: boolean) {
       gsap.set(spout, { opacity: 0 });
     }
 
-    gsap.set(traveler, { x: x - w / 2, y: y - h / 2, scale });
+    // Viewport → journey coordinates, measured in the same frame as the
+    // stops, so a resting whale's position does not change as you scroll.
+    const jr = journeyEl.getBoundingClientRect();
+    gsap.set(traveler, { x: x - jr.left - w / 2, y: y - jr.top - h / 2, scale });
     gsap.set(facing, { rotationY: facingDeg });
     gsap.set(pitch, { rotation: pitchDeg });
     traveler.dataset.whaleTone = tone;
