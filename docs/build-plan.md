@@ -7,8 +7,8 @@ Decisions are in [design.md](../design.md); copy awaiting Nic is in
 Status key: ✅ done · 🔄 in progress · ⬜ not started · ⏸ blocked on Nic
 
 **21 Oct 2026:** Nic chose the whale-journey concept. The Astro build moved onto
-this branch and the journey was rebuilt on it (old React concept: tag
-`concept-v1-react`). Nic's answers, brochure and headshot are in.
+this branch and the journey was rebuilt on it (old React concept: branch
+`archive/concept-v1-react`). Nic's answers, brochure and headshot are in.
 
 ---
 

@@ -7,7 +7,7 @@ for structure and copy; this file records how the site is built.
 (the whale's dive and its journey down the page). Javed preferred the type,
 colour and restraint of the `astro-rebuild` branch. This branch now combines
 the two: the whale journey rebuilt on the Astro foundation. The React
-concept it replaces is tagged `concept-v1-react`.
+concept it replaces is kept on the `archive/concept-v1-react` branch.
 
 ## Positioning and content
 

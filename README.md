@@ -51,5 +51,5 @@ node --test src/lib/whaleChoreography.test.mjs   # Node 22.18+
 ```
 
 This branch combines the whale-journey concept Nic chose with the Astro build
-(21 Oct 2026). The earlier Vite/React version is tagged `concept-v1-react`;
+(21 Oct 2026). The earlier Vite/React version is kept on the `archive/concept-v1-react` branch;
 its notes are in `docs/prototype-notes/`.
