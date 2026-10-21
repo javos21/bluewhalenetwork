@@ -1,0 +1,35 @@
+---
+// Selected Work — the deepest water. Three anonymised cases set
+// editorially: one large figure, the case, the client described (never
+// named) and the outcome. The full Opportunity → Approach → Outcome is on
+// /work. No client logos anywhere near here, by agreement with Nic.
+import DepthSection from '@/components/ocean/DepthSection.astro';
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import { work } from '@/data/home';
+import { caseStudies } from '@/data/work';
+---
+
+<DepthSection tone="midnight" next="ice" side="right" labelledby="work-heading">
+  <RevealHeading id="work-heading" lines={work.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
+  <p class="reveal mt-5 max-w-xl text-mist" data-reveal>{work.intro}</p>
+
+  <ol class="mt-12 border-t border-white/12">
+    {caseStudies.map((c, i) => (
+      <li class="reveal grid gap-x-8 gap-y-3 border-b border-white/12 py-9 sm:grid-cols-[9.5rem_1fr]" data-reveal style={`--delay:${i * 90}ms`}>
+        <p class="flex flex-col">
+          <span class="display text-[2.9rem] leading-none text-aqua">{c.figure.value}</span>
+          <span class="mt-2 text-sm text-mist">{c.figure.label}</span>
+        </p>
+        <div>
+          <h3 class="heading text-[1.4rem]"><a href={`/work#${c.slug}`} class="hover:text-aqua">{c.title}</a></h3>
+          <p class="mt-1.5 text-sm text-mist">{c.client}</p>
+          <p class="mt-4 max-w-xl text-white/80">{c.outcome}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <a href={work.allLink.href} class="link-arrow reveal mt-10 text-aqua" data-reveal>
+    {work.allLink.label}<span class="btn-arrow" aria-hidden="true">→</span>
+  </a>
+</DepthSection>

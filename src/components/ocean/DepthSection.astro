@@ -1,0 +1,47 @@
+---
+// A section of the Home journey: flat-colour water with the content in the
+// wide column and a "water" column on one side where the whale rests.
+// On desktop the resting point is sticky, so the whale keeps company with
+// the content as it scrolls; it crosses to the next section's side at the
+// boundary (whale-journey.ts). On mobile the water column becomes a band
+// above the content.
+//
+// Without JS or with reduced motion, a still whale sits in the anchor.
+import Whale from './Whale.astro';
+import WaveEdge from './WaveEdge.astro';
+import { isDarkTone, type Tone } from '@/lib/tones';
+
+interface Props {
+  tone: Tone;
+  /** Colour of the section below; draws the wave edge */
+  next?: Tone;
+  /** Which side the whale rests on. Omit for a section the whale skips. */
+  side?: 'left' | 'right';
+  id?: string;
+  labelledby?: string;
+  class?: string;
+}
+const { tone, next, side, id, labelledby, class: className = '' } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={['depth', `tone-${tone}`, isDarkTone(tone) && 'on-dark', next && 'has-edge', className]}
+  data-depth
+  data-tone={tone}
+  aria-labelledby={labelledby}
+>
+  <div class:list={['container-site depth-grid', side && `water-${side}`]}>
+    {side && (
+      <div class="water">
+        <div class="whale-anchor" data-whale-stop data-side={side}>
+          <Whale class="whale-static" />
+        </div>
+      </div>
+    )}
+    <div class="depth-content">
+      <slot />
+    </div>
+  </div>
+  {next && <WaveEdge to={next} />}
+</section>

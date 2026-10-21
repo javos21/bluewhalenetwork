@@ -1,0 +1,59 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import { site } from '@/data/site';
+import { isProduction } from '@/lib/env';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Home: the journey ends in its own waves, so the footer needs no top rule */
+  bare?: boolean;
+}
+
+const { title, description = site.description, bare = false } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Turn Opportunities Into Commercial Value`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {!isProduction && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#f6f4ef" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+
+    <!-- Arm motion before first paint so hidden start states never flash. -->
+    <script is:inline>
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion');
+    </script>
+
+    <ClientRouter fallback="none" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded focus:bg-deep focus:px-4 focus:py-2 focus:text-white">
+      Skip to content
+    </a>
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer bare={bare} />
+    <script>
+      import '@/scripts/motion';
+    </script>
+  </body>
+</html>

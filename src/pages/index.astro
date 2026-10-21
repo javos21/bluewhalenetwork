@@ -1,0 +1,30 @@
+---
+// Home: one dive from the surface to the deep and back up again.
+// Section order and water colours are set out in design.md ("The journey").
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import OceanHero from '@/components/sections/home/OceanHero.astro';
+import Opportunity from '@/components/sections/home/Opportunity.astro';
+import Capabilities from '@/components/sections/home/Capabilities.astro';
+import Offers from '@/components/sections/home/Offers.astro';
+import Approach from '@/components/sections/home/Approach.astro';
+import Work from '@/components/sections/home/Work.astro';
+import Founder from '@/components/sections/home/Founder.astro';
+import Surface from '@/components/sections/home/Surface.astro';
+---
+
+<BaseLayout bare>
+  <div class="journey" data-journey>
+    <OceanHero />
+    <Opportunity />
+    <Capabilities />
+    <Offers />
+    <Approach />
+    <Work />
+    <Founder />
+    <Surface />
+  </div>
+  <script>
+    import { initWhaleJourney } from '@/scripts/whale-journey';
+    initWhaleJourney();
+  </script>
+</BaseLayout>

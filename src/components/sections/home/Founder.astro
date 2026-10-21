@@ -1,0 +1,39 @@
+---
+// Founder — rising water. Nic's portrait on an Aqua notched block, the bio
+// and three credentials from his brochure. The whale gives this section
+// room: it swims on ahead to the surface.
+import DepthSection from '@/components/ocean/DepthSection.astro';
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import PortraitFrame from '@/components/ui/PortraitFrame.astro';
+import { founder } from '@/data/home';
+import type { Tone } from '@/lib/tones';
+
+interface Props { next?: Tone }
+const { next = 'paper' } = Astro.props;
+---
+
+<DepthSection tone="ice" next={next} labelledby="founder-heading" class="founder">
+  <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+    <div class="mx-auto w-[min(80vw,22rem)] lg:col-span-5 lg:w-full lg:max-w-[25rem]">
+      <PortraitFrame id="founder" tone="aqua" notch="bl" />
+    </div>
+
+    <div class="lg:col-span-6 lg:col-start-7">
+      <RevealHeading id="founder-heading" lines={founder.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
+      <p class="reveal mt-3 font-medium text-deep" data-reveal>{founder.role}</p>
+      <p class="lede reveal mt-6 text-midnight/80" data-reveal style="--delay:120ms">{founder.body}</p>
+
+      <ul class="mt-8 border-t border-midnight/12">
+        {founder.credentials.map((c, i) => (
+          <li class="reveal flex items-center gap-3 border-b border-midnight/12 py-3.5" data-reveal style={`--delay:${200 + i * 70}ms`}>
+            <span class="size-1.5 shrink-0 rounded-full bg-current"></span>{c}
+          </li>
+        ))}
+      </ul>
+
+      <a href={founder.cta.href} class="link-arrow reveal mt-9 text-deep" data-reveal style="--delay:300ms">
+        {founder.cta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</DepthSection>

@@ -1,0 +1,26 @@
+---
+// "Growth Begins With Seeing What's Possible." The first stretch of open
+// water after the dive: the opening statement fills in word by word as it
+// scrolls, with the whale resting on the left.
+import DepthSection from '@/components/ocean/DepthSection.astro';
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import ScrollFill from '@/components/motion/ScrollFill.astro';
+import StatsBand from '@/components/labs/StatsBand.astro';
+import { opportunity } from '@/data/home';
+import { showLabs } from '@/lib/env';
+
+const [statement, ...rest] = opportunity.body;
+---
+
+<DepthSection tone="ice" next="midnight" side="left" labelledby="opportunity-heading">
+  <RevealHeading
+    id="opportunity-heading"
+    lines={opportunity.lines}
+    class="heading text-[clamp(1.35rem,1.15rem+0.8vw,1.85rem)] text-deep"
+  />
+  <ScrollFill text={statement} class="display mt-8 text-[clamp(1.85rem,1.1rem+2.3vw,3.2rem)] leading-[1.12]" />
+  <div class="mt-12 grid gap-6 text-slate sm:grid-cols-2">
+    {rest.map((p, i) => <p class="reveal" data-reveal style={`--delay:${i * 100}ms`}>{p}</p>)}
+  </div>
+  {showLabs && <div class="mt-16"><StatsBand /></div>}
+</DepthSection>

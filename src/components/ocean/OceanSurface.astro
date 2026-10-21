@@ -1,0 +1,33 @@
+---
+// Three broad flat-colour wave layers along the bottom of a surface
+// section (Home hero, closing). The front layer matches the colour of the
+// section below, so the water carries straight on into it.
+// The hero's layers drift slowly; see whale-journey.ts.
+interface Props {
+  back?: string;
+  middle?: string;
+  front: string;
+  class?: string;
+  live?: boolean;
+}
+const {
+  back = 'var(--color-aqua)',
+  middle = 'var(--color-current)',
+  front,
+  class: className = '',
+  live = false,
+} = Astro.props;
+---
+
+<svg
+  class={`ocean-surface ${className}`}
+  viewBox="0 0 1600 360"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+  data-ocean={live ? '' : undefined}
+>
+  <path class="ocean-layer ocean-layer--back" fill={back} d="M-200 120C80 10 280 35 540 110S960 155 1210 65S1600 35 1800 95V400H-200Z" />
+  <path class="ocean-layer ocean-layer--middle" fill={middle} d="M-200 145C80 185 310 165 565 90S1030 80 1280 150S1640 160 1800 110V400H-200Z" />
+  <path class="ocean-layer ocean-layer--front" fill={front} d="M-200 195C70 120 320 140 600 185S1060 210 1330 140S1660 135 1800 170V400H-200Z" />
+</svg>

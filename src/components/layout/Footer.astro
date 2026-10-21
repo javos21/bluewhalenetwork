@@ -1,0 +1,41 @@
+---
+import Logo from '@/components/brand/Logo.astro';
+import WaveEdge from '@/components/ocean/WaveEdge.astro';
+import { footerLinks, primaryCta, site } from '@/data/site';
+
+interface Props {
+  /** Home ends in its own waves, so it needs no top rule */
+  bare?: boolean;
+}
+const { bare = false } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+{!bare && <div class="relative h-14 bg-ice" aria-hidden="true"><WaveEdge to="midnight" /></div>}
+<footer class="on-dark bg-midnight text-white">
+  <div class="container-site grid gap-12 pt-14 pb-10 md:grid-cols-[1.4fr_1fr_1fr] md:pt-20">
+    <div>
+      <Logo />
+      <p class="mt-6 max-w-md text-mist">{site.description}</p>
+      <a href={primaryCta.href} class="link-arrow mt-8 text-aqua">
+        {primaryCta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+    <nav aria-label="Footer">
+      <ul class="grid gap-3">
+        {footerLinks.map((link) => (
+          <li><a href={link.href} class="text-white/75 transition-colors hover:text-white">{link.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <address class="grid content-start gap-3 not-italic">
+      <a href={`mailto:${site.email}`} class="break-all text-white/75 transition-colors hover:text-white">{site.email}</a>
+      <a href={site.phoneHref} class="text-white/75 transition-colors hover:text-white">{site.phone}</a>
+      <span class="text-mist">{site.location}</span>
+    </address>
+  </div>
+  <div class="container-site flex flex-col gap-2 border-t border-white/10 py-6 text-sm text-mist sm:flex-row sm:justify-between">
+    <p>© {year} {site.name}. All rights reserved.</p>
+    <p class="text-white/45">{site.tagline}</p>
+  </div>
+</footer>

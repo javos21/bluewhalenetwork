@@ -1,0 +1,63 @@
+---
+// Our Approach — four steps on a track in deep water. The whale swims
+// along a lane above the track as the section scrolls: its resting point
+// is driven by --progress (motion.ts), and each step lights up as the
+// whale passes it.
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import Whale from '@/components/ocean/Whale.astro';
+import WaveEdge from '@/components/ocean/WaveEdge.astro';
+import { approach } from '@/data/home';
+
+const thresholds = [0.06, 0.32, 0.58, 0.84];
+---
+
+<section class="depth tone-deep on-dark has-edge" data-depth data-tone="deep" aria-labelledby="approach-heading">
+  <div class="container-site">
+    <div class="grid gap-6 lg:grid-cols-12 lg:items-end">
+      <RevealHeading id="approach-heading" lines={approach.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)] lg:col-span-7" />
+      <p class="reveal text-lg text-white/70 lg:col-span-4 lg:col-start-9" data-reveal>Identify. Develop. Connect. Advance.</p>
+    </div>
+
+    <div class="approach mt-10" data-progress>
+      <div class="approach-lane" aria-hidden="true">
+        <div class="whale-anchor approach-anchor" data-whale-stop data-side="left" data-face="right" data-swim>
+          <Whale class="whale-static" />
+        </div>
+      </div>
+
+      <div class="relative">
+        <div class="pointer-events-none absolute left-[1.05rem] top-0 h-full w-px border-l border-dashed border-white/25 lg:left-0 lg:top-[1.05rem] lg:h-px lg:w-full lg:border-t lg:border-l-0" aria-hidden="true"></div>
+        <div class="track-fill pointer-events-none absolute left-[1.05rem] top-0 w-0.5 bg-aqua lg:left-0 lg:top-[1rem] lg:h-0.5" aria-hidden="true"></div>
+
+        <ol class="relative grid gap-12 lg:grid-cols-4 lg:gap-8">
+          {approach.steps.map((step, i) => (
+            <li class="step relative pl-14 lg:pl-0 lg:pt-14" data-step={thresholds[i]}>
+              <span class="step-dot absolute left-0 top-0 grid size-[2.1rem] place-items-center rounded-full border-2 border-white/25 bg-deep text-sm font-semibold tabular-nums text-white/60 transition-all duration-500" aria-hidden="true">{i + 1}</span>
+              <h3 class="display text-[clamp(1.8rem,1.4rem+1.2vw,2.5rem)] text-white/35 transition-colors duration-500">{step.word}.</h3>
+              <p class="mt-3 max-w-xs text-white/70">{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+
+    <p class="mt-16 text-sm text-white/55">{approach.note}</p>
+  </div>
+  <WaveEdge to="midnight" reverse />
+</section>
+
+<style>
+  .track-fill { height: calc(var(--progress, 1) * 100%); }
+  @media (min-width: 64rem) {
+    .track-fill { height: 2px; width: calc(var(--progress, 1) * 100%); }
+  }
+  :global(html:not(.js-motion)) .step h3,
+  .step:global(.is-passed) h3 { color: #fff; }
+  :global(html:not(.js-motion)) .step-dot,
+  .step:global(.is-passed) .step-dot {
+    border-color: var(--color-aqua);
+    background: var(--color-aqua);
+    color: var(--color-midnight);
+    box-shadow: 0 0 0 6px rgb(119 207 241 / 0.22);
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import ClosingCta from '@/components/sections/ClosingCta.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { capabilityList } from '@/data/capabilities';
+import { primaryCta } from '@/data/site';
+---
+
+<BaseLayout title="What We Do" description="Opportunity identification, commercial strategy, innovation and strategic partnerships.">
+  <PageIntro lines={['Helping Businesses Find and Develop', 'Commercial Opportunities.']} lede="Blue Whale combines opportunity identification, commercial strategy, innovation and strategic partnerships to help businesses determine where value can be created and how to pursue it." />
+
+  <section class="bg-ice py-12 sm:py-16">
+    <div class="container-site grid gap-5">
+      {capabilityList.map((cap, i) => (
+        <article id={cap.slug} class="reveal grid gap-8 rounded-[1.5rem] bg-white p-7 sm:p-10 lg:grid-cols-12" data-reveal style={`--delay:${i * 50}ms`}>
+          <div class="lg:col-span-5">
+            <span class="grid size-11 place-items-center rounded-full bg-deep text-aqua"><Icon name={cap.icon} class="size-5" /></span>
+            <h2 class="heading mt-6 text-[clamp(1.6rem,1.3rem+1vw,2.1rem)]">{cap.title}</h2>
+            <p class="mt-2 text-lg text-deep">{cap.promise}</p>
+          </div>
+          <div class="lg:col-span-6 lg:col-start-7">
+            <p class="text-midnight/85">{cap.body}</p>
+            <ul class="mt-6 grid gap-2.5 border-t border-rule pt-6">
+              {cap.areas.map((a) => <li class="flex gap-3"><span class="mt-2.5 size-1.5 shrink-0 rounded-full bg-current"></span>{a}</li>)}
+            </ul>
+            <a href={primaryCta.href} class="link-arrow mt-7 text-deep">{cap.cta}<span class="btn-arrow" aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

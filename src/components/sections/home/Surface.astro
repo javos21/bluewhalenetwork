@@ -1,0 +1,29 @@
+---
+// Closing — back at the surface. The whale rises to the waterline and
+// spouts; the page ends on the same sky and waves it began with, the front
+// wave running into the midnight footer.
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import Whale from '@/components/ocean/Whale.astro';
+import OceanSurface from '@/components/ocean/OceanSurface.astro';
+import { closing } from '@/data/home';
+import { site } from '@/data/site';
+---
+
+<section class="surface tone-paper" data-depth data-tone="paper" aria-labelledby="closing-heading">
+  <div class="container-site surface-grid">
+    <div class="surface-copy">
+      <RevealHeading id="closing-heading" lines={closing.lines} class="display text-[clamp(2.3rem,1.3rem+3.3vw,4.3rem)]" />
+      {closing.body.map((p, i) => <p class="reveal mt-5 max-w-lg text-slate" data-reveal style={`--delay:${i * 90}ms`}>{p}</p>)}
+      <div class="reveal mt-9 flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal style="--delay:220ms">
+        <a href={closing.cta.href} class="btn btn-primary">{closing.cta.label}<span class="btn-arrow" aria-hidden="true">→</span></a>
+        <a href={`mailto:${site.email}`} class="link-arrow text-deep">Email us</a>
+      </div>
+    </div>
+    <div class="surface-water">
+      <div class="whale-anchor" data-whale-stop data-side="right" data-spout>
+        <Whale class="whale-static" />
+      </div>
+    </div>
+  </div>
+  <OceanSurface front="var(--color-midnight)" class="surface-ocean" />
+</section>

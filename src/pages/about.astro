@@ -1,0 +1,28 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import Founder from '@/components/sections/home/Founder.astro';
+import ClosingCta from '@/components/sections/ClosingCta.astro';
+---
+
+<BaseLayout title="About" description="Blue Whale Consulting identifies opportunities, turns them into commercial propositions and helps bring them to market.">
+  <PageIntro
+    lines={['Commercial Thinking.', 'Opportunity by Opportunity.']}
+    lede="Blue Whale Consulting works with businesses to identify opportunities, develop commercial strategies and turn promising ideas into actionable propositions."
+  />
+
+  <section class="bg-ice pt-10 pb-4 sm:pt-14">
+    <div class="container-site grid gap-8 lg:grid-cols-12">
+      <p class="display reveal text-[clamp(1.6rem,1.2rem+1.4vw,2.4rem)] leading-[1.18] lg:col-span-8" data-reveal>
+        We identify opportunities, turn them into commercial propositions and help bring them to market.
+      </p>
+      <div class="grid gap-5 text-slate lg:col-span-7">
+        <p class="reveal" data-reveal>Based in Trinidad &amp; Tobago, Blue Whale works with established businesses, founders and brands across the Caribbean and the markets they want to reach.</p>
+        <p class="reveal" data-reveal style="--delay:80ms">The work runs from the first question (is this worth pursuing?) through strategy, product development and partnerships, to the campaigns that take a proposition to market.</p>
+      </div>
+    </div>
+  </section>
+
+  <Founder next="ice" />
+  <ClosingCta />
+</BaseLayout>

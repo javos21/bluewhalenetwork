@@ -1,0 +1,19 @@
+---
+// Animated wave along the bottom of a section, filled with the colour of
+// the section below so each boundary reads as moving water. Flat colour,
+// slow drift; still under reduced motion.
+import type { Tone } from '@/lib/tones';
+import { toneColor } from '@/lib/tones';
+
+interface Props {
+  to: Tone;
+  reverse?: boolean;
+}
+const { to, reverse = false } = Astro.props;
+---
+
+<div class="wave-edge" aria-hidden="true">
+  <svg viewBox="0 0 2400 100" preserveAspectRatio="none" focusable="false" class:list={[reverse && 'is-reverse']} style={`fill:${toneColor[to]}`}>
+    <path d="M0 40 C200 0 400 0 600 40 S1000 80 1200 40 C1400 0 1600 0 1800 40 S2200 80 2400 40 V100 H0 Z" />
+  </svg>
+</div>

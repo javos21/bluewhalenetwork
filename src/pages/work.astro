@@ -1,0 +1,51 @@
+---
+// Selected Work: three anonymised cases, each as The Opportunity →
+// Our Approach → The Outcome. No client names or logos on this page.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import ClosingCta from '@/components/sections/ClosingCta.astro';
+import { caseStudies } from '@/data/work';
+import { offerBySlug, offerHref } from '@/data/offers';
+import { work } from '@/data/home';
+
+const parts = [
+  ['The Opportunity', 'opportunity'],
+  ['Our Approach', 'approach'],
+  ['The Outcome', 'outcome'],
+] as const;
+---
+
+<BaseLayout title="Our Work" description="Selected work by Blue Whale Consulting: product development, supply-chain savings and integrated campaigns.">
+  <PageIntro lines={['Selected Work.']} lede={work.intro} />
+
+  <section class="bg-ice py-12 sm:py-16" aria-label="Case studies">
+    <div class="container-site grid gap-6">
+      {caseStudies.map((c) => {
+        const offer = offerBySlug(c.offer);
+        return (
+          <article id={c.slug} class="reveal scroll-mt-28 rounded-[1.5rem] bg-white p-7 sm:p-10 lg:grid lg:grid-cols-12 lg:gap-8" data-reveal>
+            <header class="lg:col-span-4">
+              <p class="display text-[clamp(3rem,2rem+3vw,4.5rem)] leading-none text-deep">{c.figure.value}</p>
+              <p class="mt-2 text-sm text-slate">{c.figure.label}</p>
+              <h2 class="heading mt-8 text-[1.6rem]">{c.title}</h2>
+              <p class="mt-2 text-slate">{c.client}</p>
+            </header>
+            <dl class="mt-8 grid gap-6 lg:col-span-7 lg:col-start-6 lg:mt-0">
+              {parts.map(([label, key]) => (
+                <div class="border-t border-rule pt-5 sm:grid sm:grid-cols-[10rem_1fr] sm:gap-6">
+                  <dt class="font-semibold text-deep">{label}</dt>
+                  <dd class="mt-2 text-midnight/85 sm:mt-0">{c[key]}</dd>
+                </div>
+              ))}
+              {offer && (
+                <a href={offerHref(offer.slug)} class="link-arrow mt-2 text-deep">Related service: {offer.name}<span class="btn-arrow" aria-hidden="true">→</span></a>
+              )}
+            </dl>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

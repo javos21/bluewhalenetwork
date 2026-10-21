@@ -1,0 +1,98 @@
+---
+// Home opening: the surface and the dive.
+//
+// The hero (paper sky, three moving wave layers) and the Clients panel
+// below it form one pinned scene. Scrolling dives the whale through the
+// waterline (with a splash where its head meets the water) while the
+// ocean rises to fill the screen, and the client logos arrive like a
+// school of fish as the whale settles. whale-journey.ts drives it; it
+// then carries the same whale on through the rest of the page.
+//
+// Without JS or with reduced motion the two panels simply stack, each
+// with a still whale.
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import Whale from '@/components/ocean/Whale.astro';
+import OceanSurface from '@/components/ocean/OceanSurface.astro';
+import WaveEdge from '@/components/ocean/WaveEdge.astro';
+import { hero, clientsSection } from '@/data/home';
+import { clients, logoHeight } from '@/data/clients';
+import { primaryCta } from '@/data/site';
+---
+
+<div class="ocean-world" data-ocean-world>
+  <!-- The one whale that travels the whole page (decorative) -->
+  <div class="traveler" data-traveler aria-hidden="true">
+    <div class="traveler-enter" data-traveler-enter>
+      <div class="traveler-facing" data-traveler-facing>
+        <div class="traveler-pitch" data-traveler-pitch>
+          <svg class="whale-trails" data-whale-trails viewBox="25 20 450 270" aria-hidden="true" focusable="false">
+            <g fill="none" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="35 110">
+              <path d="M-65 74Q12 58 108 105" /><path d="M-80 123Q5 100 107 133" /><path d="M-50 166Q20 145 104 164" />
+            </g>
+          </svg>
+          <Whale live />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ocean-scenery" data-scenery>
+    <section class="ocean-hero tone-paper" data-hero-scene data-tone="paper" aria-labelledby="hero-heading">
+      <div class="container-site hero-grid">
+        <div class="hero-whale-slot" data-whale-start>
+          <Whale class="whale-static" />
+        </div>
+        <div class="hero-copy" data-hero-copy>
+          <RevealHeading
+            as="h1"
+            id="hero-heading"
+            lines={hero.lines}
+            highlightLast
+            rotate={hero.rotate}
+            class="display text-[clamp(2.4rem,1.2rem+3.6vw,4.25rem)]"
+          />
+          <p class="lede reveal mt-6 max-w-[34rem] text-slate" data-reveal style="--delay:250ms">{hero.lede}</p>
+          <div class="reveal mt-9 flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal style="--delay:380ms">
+            <a href={primaryCta.href} class="btn btn-primary">
+              {primaryCta.label}<span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href={hero.secondary.href} class="link-arrow text-deep">
+              {hero.secondary.label}<span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <OceanSurface front="var(--color-deep)" class="hero-ocean" live />
+      <svg class="dive-splash" data-splash viewBox="0 0 320 160" aria-hidden="true" focusable="false">
+        <g class="splash-rings" fill="none" stroke="#f6f4ef" stroke-width="3"><ellipse cx="160" cy="112" rx="78" ry="10" /><ellipse cx="160" cy="112" rx="108" ry="15" opacity=".8" /></g>
+        <g class="splash-droplets" fill="none" stroke="var(--color-deep)" stroke-width="3.5" stroke-linecap="round"><path d="M133 100Q118 72 103 70M155 96Q149 63 139 50M176 99Q193 73 210 69" /><path d="M94 57l-2-4M130 34l-1-5M217 52l3-5M185 49l2-5" /></g>
+      </svg>
+    </section>
+
+    <section class="dive-panel tone-deep on-dark" data-dive-panel data-depth data-tone="deep" aria-labelledby="clients-heading">
+      <div class="container-site dive-grid">
+        <div class="dive-copy">
+          <RevealHeading id="clients-heading" lines={clientsSection.lines} class="display text-[clamp(2rem,1.3rem+2.4vw,3.4rem)]" />
+          <ul class="client-school" aria-label="Clients and collaborators">
+            {clients.map((c) => (
+              <li class="client" data-client>
+                <span
+                  class="client-logo"
+                  role="img"
+                  aria-label={c.name}
+                  style={`--logo:url(/logos/clients/${c.file}.svg);--h:${logoHeight(c).toFixed(2)}rem;aspect-ratio:${c.w}/${c.h}`}
+                ></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="water">
+          <div class="whale-anchor" data-whale-stop data-dive-anchor data-side="right">
+            <Whale class="whale-static" />
+          </div>
+        </div>
+      </div>
+      <WaveEdge to="ice" />
+    </section>
+  </div>
+</div>

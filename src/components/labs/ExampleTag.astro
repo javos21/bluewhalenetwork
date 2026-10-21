@@ -1,0 +1,12 @@
+---
+// Small marker on proof-of-concept content: "Example — Nic to supply".
+interface Props {
+  text?: string;
+  class?: string;
+}
+const { text = 'Example — Nic to supply', class: className = '' } = Astro.props;
+---
+
+<span class={`inline-flex items-center gap-1.5 rounded-full border border-dashed border-current/60 px-2.5 py-0.5 text-[0.7rem] font-medium tracking-wide text-current ${className}`}>
+  <span class="size-1.5 rounded-full bg-current"></span>{text}
+</span>

@@ -1,0 +1,29 @@
+---
+// Closing call to action for inner pages: a deep-water panel on the ice
+// page body, with the whale resting beside the invitation.
+import RevealHeading from '@/components/motion/RevealHeading.astro';
+import Whale from '@/components/ocean/Whale.astro';
+import { closing } from '@/data/home';
+
+interface Props {
+  lines?: string[];
+  body?: string;
+  cta?: { label: string; href: string };
+}
+const { lines = closing.lines, body = closing.body[1], cta = closing.cta } = Astro.props;
+---
+
+<section class="bg-ice pb-20 sm:pb-28" aria-labelledby="closing-heading">
+  <div class="container-site">
+    <div class="tone-deep on-dark relative grid gap-10 overflow-hidden rounded-[1.75rem] px-6 py-12 sm:px-12 sm:py-14 lg:grid-cols-12 lg:items-center lg:px-14">
+      <div class="lg:col-span-7">
+        <RevealHeading id="closing-heading" lines={lines} class="display text-[clamp(2rem,1.3rem+2.6vw,3.4rem)]" />
+        {body && <p class="reveal mt-5 max-w-lg text-white/75" data-reveal>{body}</p>}
+        <a href={cta.href} class="btn btn-accent reveal mt-8" data-reveal style="--delay:150ms">{cta.label}<span class="btn-arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="hidden lg:col-span-4 lg:col-start-9 lg:block" aria-hidden="true">
+        <div class="whale-anchor ml-auto w-full max-w-[20rem]" data-side="right"><Whale class="whale-static" /></div>
+      </div>
+    </div>
+  </div>
+</section>

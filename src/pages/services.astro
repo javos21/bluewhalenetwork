@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import ClosingCta from '@/components/sections/ClosingCta.astro';
+import { offers, offerHref } from '@/data/offers';
+---
+
+<BaseLayout title="Services" description="Four structured ways to explore an opportunity, plan growth, develop a product and take it to market.">
+  <PageIntro
+    lines={['A Clear Starting Point', 'for Your Next', 'Commercial Move.']}
+    lede="Every business faces different challenges. Each offer gives you a defined starting point, clear deliverables and a realistic timeline, from testing an idea to taking it to market."
+  />
+
+  <section class="bg-ice py-16 sm:py-20" aria-label="Our services">
+    <ol class="container-site grid gap-5">
+      {offers.map((offer, i) => (
+        <li class="reveal" data-reveal style={`--delay:${i * 60}ms`}>
+          <a href={offerHref(offer.slug)} class="offer-row group">
+            <span class="text-sm font-semibold tabular-nums text-current" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h2 class="heading text-[clamp(1.5rem,1.2rem+1vw,2rem)]">{offer.name}</h2>
+              <p class="mt-2 text-lg text-deep">{offer.promise}</p>
+              <p class="mt-4 max-w-xl text-slate">{offer.summary}</p>
+            </div>
+            <ul class="grid content-start gap-2.5 text-[0.95rem]">
+              {offer.deliverables.map((d) => <li class="flex gap-3"><span class="mt-2.5 size-1.5 shrink-0 rounded-full bg-current"></span>{d}</li>)}
+            </ul>
+            <div class="flex flex-col justify-between gap-6 text-sm text-slate">
+              <p><span class="block font-semibold text-midnight">{offer.timeline}</span>{offer.delivery}</p>
+              <span class="link-arrow text-base text-deep">Explore<span class="sr-only"> {offer.name}</span><span class="btn-arrow" aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <ClosingCta lines={['Not Sure Where', 'to Start?']} body="Tell us what you’re working on. We’ll suggest the right starting point, or shape one around it." />
+</BaseLayout>

@@ -3,3 +3,8 @@ dist/
 .playwright-cli/
 output/playwright/
 *.tsbuildinfo
+.astro/
+.env
+.env.*
+.wrangler/
+!.env.labs

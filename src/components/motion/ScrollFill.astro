@@ -1,0 +1,20 @@
+---
+// Paragraph whose words fill in from grey to ink as it scrolls through
+// the viewport. Text is split into words at build time; assistive tech
+// reads the plain text via aria-label.
+interface Props {
+  text: string;
+  as?: 'p' | 'h2' | 'h3';
+  class?: string;
+}
+const { text, as: Tag = 'p', class: className = '' } = Astro.props;
+const words = text.split(/\s+/);
+---
+
+<Tag class={className} data-scroll-fill aria-label={text}>
+  {words.map((word, i) => (
+    <>
+      <span class="w" aria-hidden="true">{word}</span>{i < words.length - 1 ? ' ' : ''}
+    </>
+  ))}
+</Tag>

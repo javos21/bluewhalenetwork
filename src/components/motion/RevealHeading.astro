@@ -1,0 +1,47 @@
+---
+// Headline whose lines rise out of a mask when revealed. Pass `lines` so
+// breaks are deliberate; long lines still wrap inside their own mask on
+// narrow screens.
+//
+// highlightLast: the last line sits on an Aqua block that sweeps in after
+//                the line has risen (the reference's highlight box).
+// rotate:        with highlightLast, the last line cycles through these
+//                phrases (first one = the last line itself) with a vertical
+//                fade-and-slide, and the block resizes to fit each phrase.
+// accentLast:    the last line is coloured Aqua instead.
+type Tag = 'h1' | 'h2' | 'h3' | 'p';
+interface Props {
+  as?: Tag;
+  lines: string[];
+  class?: string;
+  accentLast?: boolean;
+  highlightLast?: boolean;
+  rotate?: string[];
+  id?: string;
+}
+const { as: Tag = 'h2', lines, class: className = '', accentLast = false, highlightLast = false, rotate = [], id } = Astro.props;
+const last = lines.length - 1;
+const phrases = rotate.length ? [lines[last], ...rotate.filter((p) => p !== lines[last])] : [];
+---
+
+<Tag id={id} class={`reveal-lines ${className}`} data-reveal aria-label={lines.join(' ')}>
+  {lines.map((line, i) => (
+    <span class="line" aria-hidden="true" style={`--i:${i}`}>
+      <span class:list={[accentLast && i === last && 'text-aqua']}>
+        {highlightLast && i === last ? (
+          phrases.length > 1 ? (
+            <span class="highlight rotator" data-rotator>
+              {phrases.map((p, j) => (
+                <span class="rotator-word" data-active={j === 0 ? '' : undefined}>{p}</span>
+              ))}
+            </span>
+          ) : (
+            <span class="highlight">{line}</span>
+          )
+        ) : (
+          line
+        )}
+      </span>
+    </span>
+  ))}
+</Tag>

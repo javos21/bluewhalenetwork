@@ -1,0 +1,79 @@
+---
+// Offer page: promise, who it's for, what you receive, timeline and
+// delivery, related (anonymised) work, other offers, and a CTA that
+// pre-fills the contact form.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/sections/PageIntro.astro';
+import ClosingCta from '@/components/sections/ClosingCta.astro';
+import { offers, offerHref, offerContactHref, type Offer } from '@/data/offers';
+import { caseStudies } from '@/data/work';
+
+export function getStaticPaths() {
+  return offers.map((offer) => ({ params: { slug: offer.slug }, props: { offer } }));
+}
+
+const { offer } = Astro.props as { offer: Offer };
+const related = caseStudies.find((c) => c.offer === offer.slug);
+const others = offers.filter((o) => o.slug !== offer.slug);
+---
+
+<BaseLayout title={offer.name} description={offer.summary}>
+  <PageIntro lines={[offer.name]} lede={offer.promise}>
+    <a href={offerContactHref(offer)} class="btn btn-primary reveal mt-9" data-reveal style="--delay:300ms">
+      {offer.cta}<span class="btn-arrow" aria-hidden="true">→</span>
+    </a>
+  </PageIntro>
+
+  <section class="bg-ice pt-14 pb-16 sm:pb-20">
+    <div class="container-site grid gap-12 lg:grid-cols-12 lg:gap-8">
+      <div class="lg:col-span-7">
+        <p class="lede text-midnight/85">{offer.intro}</p>
+        <p class="mt-6 text-slate"><strong class="font-semibold text-midnight">Best suited for:</strong> {offer.bestFor}</p>
+
+        <h2 class="heading mt-14 text-2xl">What you receive</h2>
+        <ol class="mt-6 grid gap-3">
+          {offer.deliverables.map((d, i) => (
+            <li class="reveal flex gap-5 rounded-2xl bg-white p-5 sm:p-6" data-reveal style={`--delay:${i * 70}ms`}>
+              <span class="grid size-9 shrink-0 place-items-center rounded-full bg-deep text-sm font-semibold text-aqua">{i + 1}</span>
+              <span class="pt-1.5">{d}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <dl class="grid gap-6 rounded-2xl border border-midnight/10 bg-paper p-6 sm:p-7 lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+          <div><dt class="text-sm text-slate">Timeline</dt><dd class="heading mt-1 text-lg">{offer.timeline}</dd></div>
+          <div><dt class="text-sm text-slate">Delivery</dt><dd class="heading mt-1 text-lg">{offer.delivery}</dd></div>
+          <div><dt class="text-sm text-slate">Pricing</dt><dd class="mt-1">Shaped around scope. We’ll confirm it once we understand the opportunity.</dd></div>
+          <a href={offerContactHref(offer)} class="btn btn-primary w-full">{offer.cta}<span class="btn-arrow" aria-hidden="true">→</span></a>
+        </dl>
+      </aside>
+    </div>
+
+    {related && (
+      <div class="container-site mt-20">
+        <h2 class="heading text-2xl">Related work</h2>
+        <a href={`/work#${related.slug}`} class="tone-midnight mt-6 grid gap-6 rounded-2xl p-7 transition-transform duration-300 hover:-translate-y-1 sm:grid-cols-[9rem_1fr] sm:p-9">
+          <p class="flex flex-col"><span class="display text-5xl leading-none text-aqua">{related.figure.value}</span><span class="mt-2 text-sm text-mist">{related.figure.label}</span></p>
+          <div>
+            <p class="heading text-xl">{related.title}</p>
+            <p class="mt-1 text-sm text-mist">{related.client}</p>
+            <p class="mt-4 max-w-2xl text-white/80">{related.outcome}</p>
+          </div>
+        </a>
+      </div>
+    )}
+
+    <div class="container-site mt-20">
+      <h2 class="heading text-2xl">Other services</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-3">
+        {others.map((o) => (
+          <li><a href={offerHref(o.slug)} class="offer-card"><span class="heading text-lg">{o.name}</span><span class="mt-2 text-sm text-slate">{o.promise}</span><span class="link-arrow mt-5 text-deep">Explore<span class="btn-arrow" aria-hidden="true">→</span></span></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

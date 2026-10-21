@@ -1,0 +1,39 @@
+---
+// The Blue Whale mark as the swimming whale: refined artwork, cropped to
+// the mark (no wordmark), with the spout group for the closing breach.
+// Colours come from --whale-* custom properties so the same SVG can sit on
+// light water (deep whale) or dark water (pale whale). See .whale-tone-*.
+//
+// The body path keeps the artwork's exact command structure: the journey
+// script flexes the tail by rewriting its coordinates.
+import { markPaths } from '@/lib/logo';
+
+interface Props {
+  class?: string;
+  /** Mark the instance the journey script animates */
+  live?: boolean;
+}
+const { class: className = '', live = false } = Astro.props;
+---
+
+<svg
+  viewBox="25 20 450 270"
+  class={`whale ${className}`}
+  aria-hidden="true"
+  focusable="false"
+  data-whale-svg={live ? '' : undefined}
+>
+  <g class="whale-spout" data-whale-spout opacity="0">
+    <path d="M357.5 157 C356 143 354 135 358 124 C362 115 369 108 369 97" fill="none" stroke-width="4.5" stroke-linecap="round" class="spout-a" />
+    <path d="M356 151 C350 139 342 131 334 124" fill="none" stroke-width="3.5" stroke-linecap="round" class="spout-b" />
+    <path d="M360 150 C369 140 380 131 387 121" fill="none" stroke-width="3.5" stroke-linecap="round" class="spout-a" />
+    <circle cx="331" cy="117" r="2.7" class="spout-drop-a" />
+    <circle cx="391" cy="114" r="2.4" class="spout-drop-b" />
+    <circle cx="369" cy="89" r="2.2" class="spout-drop-a" />
+    <circle cx="345" cy="108" r="1.8" class="spout-drop-b" />
+  </g>
+  <path d={markPaths.whale} class="whale-body" data-whale-body={live ? '' : undefined} />
+  {markPaths.bands.map((band) => (
+    <path d={band.d} class={band.tone === 'aqua' ? 'whale-band-light' : 'whale-band'} />
+  ))}
+</svg>
