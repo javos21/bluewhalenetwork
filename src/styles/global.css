@@ -209,7 +209,7 @@
 }
 .rotator-word {
   grid-area: 1 / 1;
-  justify-self: center;
+  justify-self: start; /* each phrase sits flush left in the fixed-width block */
   opacity: 0;
   transform-origin: 50% 50%;
   transform: translateY(55%) rotateX(-85deg);
