@@ -11,7 +11,7 @@ original wording.
 |---|---|---|
 | Hero headline *(new)* | "Turn Opportunities Into Commercial Value." | The highlighted phrase rotates: **Commercial Value.** (always first) → New Revenue. → Lasting Growth. The two extra phrases are suggestions; Nic can change, add or remove them. Screen readers and search engines only see his original line. |
 | Hero | Two supporting paragraphs. The second reads: "From growth strategy and innovation to commercialisation and strategic partnerships, we help businesses turn possibilities into commercially actionable propositions." | First paragraph only. The brief asks to avoid long hero intros, and the four capabilities are covered two sections later. |
-| The opportunity, para 2 | "…recognising which opportunities are worth pursuing and determining how to turn them into commercial value." | "…recognising which ones are worth pursuing, and how to turn them into commercial value." |
+| The opportunity, para 2 (section cut from Home, 23 Oct 2026) | "…recognising which opportunities are worth pursuing and determining how to turn them into commercial value." | "…recognising which ones are worth pursuing, and how to turn them into commercial value." |
 | What we do | *(no heading in the brief)* | Heading added: "What We Do" |
 | Opportunity Identification | "Recognise opportunities for growth, innovation, market expansion and commercial advantage." | "Recognise openings for growth, innovation, market expansion and competitive advantage." |
 | Commercial Strategy | "Determine where to focus, how to compete and how to turn promising opportunities into actionable plans." | "Decide where to focus, how to compete and how to turn promising options into actionable plans." |

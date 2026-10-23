@@ -25,7 +25,7 @@ this branch and the journey was rebuilt on it (old React concept: branch
 - ✅ Pinned dive from the surface into the Clients section, with splash and school-of-fish logos
 - ✅ Whale follows resting points through every section; crosses at boundaries, never over copy
 - ✅ Swims the Approach track; surfaces and spouts at the closing
-- ✅ Sections: Clients, Opportunity, What We Do, Offers, Approach, Selected Work, Founder, Closing
+- ✅ Sections: Clients, What We Do, Offers, Approach, Selected Work, Founder, Closing
 - ✅ Nic's real headshot (cut out, greyscale)
 - 🔄 Javed's and Nic's review on the preview link
 

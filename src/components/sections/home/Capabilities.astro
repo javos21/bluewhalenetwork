@@ -1,6 +1,6 @@
 ---
 // What We Do — the four capabilities as an accordion in midnight water.
-// The open row carries the promise, the description and the areas of work.
+// The open row carries the description and the areas of work.
 import DepthSection from '@/components/ocean/DepthSection.astro';
 import RevealHeading from '@/components/motion/RevealHeading.astro';
 import Icon from '@/components/ui/Icon.astro';
@@ -8,7 +8,7 @@ import { capabilities } from '@/data/home';
 import { capabilityList } from '@/data/capabilities';
 ---
 
-<DepthSection tone="midnight" next="paper" side="right" labelledby="capabilities-heading">
+<DepthSection tone="midnight" next="paper" side="left" labelledby="capabilities-heading">
   <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
     <RevealHeading id="capabilities-heading" lines={capabilities.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
     <a href={capabilities.cta.href} class="link-arrow reveal text-aqua" data-reveal>
@@ -29,8 +29,7 @@ import { capabilityList } from '@/data/capabilities';
           </span>
         </summary>
         <div class="pb-8 sm:pl-[3.75rem]">
-          <p class="text-lg text-aqua">{cap.promise}</p>
-          <p class="mt-3 max-w-xl text-white/75">{cap.body}</p>
+          <p class="max-w-xl text-aqua">{cap.body}</p>
           <ul class="mt-6 grid gap-x-8 gap-y-2.5 text-white/90 sm:grid-cols-2">
             {cap.areas.map((a) => <li class="flex gap-3"><span class="mt-2.5 size-1.5 shrink-0 rounded-full bg-aqua"></span>{a}</li>)}
           </ul>

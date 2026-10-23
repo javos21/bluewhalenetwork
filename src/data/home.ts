@@ -1,15 +1,6 @@
 // Home page copy — Nic's brief, sections 1–6, with light edits recorded in
 // docs/copy-edits.md for his approval.
 
-export const opportunity = {
-  lines: ['Growth Begins With', 'Seeing What’s Possible.'],
-  body: [
-    'Not every opportunity is obvious. Some emerge from an unmet customer need, a new market, a promising idea or a relationship that has yet to be explored.',
-    'The challenge is recognising which ones are worth pursuing, and how to turn them into commercial value.',
-    'Blue Whale helps businesses identify those opportunities, develop the proposition and establish a practical path forward.',
-  ],
-};
-
 export const capabilities = {
   lines: ['What We Do'],
   items: [
@@ -47,7 +38,7 @@ export const clientsSection = {
 };
 
 export const solutions = {
-  lines: ['Different Challenges.', 'A Clearer Path Forward.'],
+  lines: ['Our Solutions.'],
   intro:
     'Whether you’re testing a new idea, planning your next stage of growth or taking a proposition to market, each offer gives you a defined starting point, clear deliverables and a realistic timeline.',
   allLink: { label: 'Compare all services', href: '/services' },
@@ -68,7 +59,6 @@ export const approach = {
     { word: 'Connect', body: 'Bring in the partners, resources and capabilities needed to progress.' },
     { word: 'Advance', body: 'Set the next steps toward implementation and market.' },
   ],
-  note: 'A simplified overview of our approach, not a guarantee of execution or commercial success.',
 };
 
 export const founder = {

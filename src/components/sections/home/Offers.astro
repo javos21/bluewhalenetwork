@@ -1,13 +1,15 @@
 ---
-// The four offers, each with its promise, timeline and delivery, leading to
-// its own page. Pricing stays off the site.
+// The four offers, each with its promise, leading to its own page, where
+// the timeline and delivery are set out. Pricing stays off the site.
 import DepthSection from '@/components/ocean/DepthSection.astro';
 import RevealHeading from '@/components/motion/RevealHeading.astro';
 import { solutions } from '@/data/home';
 import { offers, offerHref } from '@/data/offers';
+import StatsBand from '@/components/labs/StatsBand.astro';
+import { showLabs } from '@/lib/env';
 ---
 
-<DepthSection tone="paper" next="deep" side="left" labelledby="offers-heading">
+<DepthSection tone="paper" next="deep" side="right" labelledby="offers-heading">
   <RevealHeading id="offers-heading" lines={solutions.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
   <p class="lede reveal mt-6 max-w-2xl text-slate" data-reveal>{solutions.intro}</p>
 
@@ -15,10 +17,8 @@ import { offers, offerHref } from '@/data/offers';
     {offers.map((offer, i) => (
       <li class="reveal" data-reveal style={`--delay:${i * 80}ms`}>
         <a href={offerHref(offer.slug)} class="offer-card group">
-          <span class="text-sm font-semibold tabular-nums text-current" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <h3 class="heading mt-5 text-[1.45rem]">{offer.name}</h3>
+          <h3 class="heading text-[1.45rem]">{offer.name}</h3>
           <p class="mt-3 text-slate">{offer.promise}</p>
-          <p class="mt-6 border-t border-rule pt-4 text-sm text-slate"><span class="text-midnight">{offer.timeline}.</span> {offer.delivery}.</p>
           <span class="link-arrow mt-6 text-deep">Explore<span class="sr-only"> {offer.name}</span><span class="btn-arrow" aria-hidden="true">→</span></span>
         </a>
       </li>
@@ -28,4 +28,5 @@ import { offers, offerHref } from '@/data/offers';
   <a href={solutions.allLink.href} class="link-arrow reveal mt-10 text-deep" data-reveal>
     {solutions.allLink.label}<span class="btn-arrow" aria-hidden="true">→</span>
   </a>
+  {showLabs && <div class="mt-16"><StatsBand /></div>}
 </DepthSection>

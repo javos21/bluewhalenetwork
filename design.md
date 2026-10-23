@@ -54,13 +54,17 @@ The page is one dive, from the surface to the deep and back up.
 |---|---|---|---|
 | 1 | Paper sky, waves | Hero | Rests beside the headline, waves drift |
 | 2 | Deep (pinned) | Selected Clients & Collaborations | Dives through the waterline with a splash; logos arrive like a school of fish |
-| 3 | Ice | Opportunity statement (scroll-filled) | Left |
-| 4 | Midnight | What We Do | Right |
-| 5 | Paper | Our offers | Left |
-| 6 | Deep | Approach | Swims along the track as the steps light up |
-| 7 | Midnight (deepest) | Selected Work | Right |
-| 8 | Ice | Founder | Swims on ahead and gives this section room |
-| 9 | Paper sky, waves | Closing | Surfaces at the waterline and spouts |
+| 3 | Midnight | What We Do | Left |
+| 4 | Paper | Our offers | Right |
+| 5 | Deep | Approach | Swims along the track as the steps light up |
+| 6 | Midnight (deepest) | Selected Work | Right |
+| 7 | Ice | Founder | Swims on ahead and gives this section room |
+| 8 | Paper sky, waves | Closing | Surfaces at the waterline and spouts |
+
+The opportunity statement that sat between the clients and What We Do was
+cut on 23 Oct 2026 to shorten Home. The dive now carries straight on down
+into midnight, mirroring Approach into Work, and the resting sides flipped
+so the whale still crosses at every boundary.
 
 Each section ends in a slowly drifting wave of the next section's colour.
 Water alternates light and dark for rhythm, deepest at the work, rising
@@ -87,7 +91,7 @@ through the founder to the surface.
 2. **Drifting water**: hero wave layers and section wave edges.
 3. **Headline reveals**: lines rise out of a mask; the hero's highlight phrase
    flips through three phrases.
-4. **Scroll-filled text** on the opening statement.
+4. **Scroll-filled text** (`ScrollFill`): not used on Home since the opening statement was cut; kept for reuse.
 5. **Approach track** fills and lights steps as the whale swims it.
 6. **Fade-ups, accordion, hover states, page transitions.**
 
