@@ -35,3 +35,18 @@ lines for Growth Strategy, The POD Sprint and Continuity Check:
 - **The POD Build**: "Develop the proposition, test the business model and set a structured route to market."
 - **The POD Partnership**: "A more involved, partnership-based engagement to develop and advance an opportunity."
 - **Ongoing Communications Support**: "Consistent support with agreed communications and content priorities."
+
+## Contact form (step 4)
+
+The brief's exact field list wasn't in the material we have, so these are a
+standard set for Nic to confirm. All wording below is new.
+
+| Item | On the site |
+|---|---|
+| Fields | Name, Email, Phone *(optional)*, Business or organisation *(optional)*, Area of interest, Message |
+| Area of interest options | The six areas already used on the offer pages: Opportunity identification · Growth strategy · Innovation and commercialisation · Partnerships and business development · Campaigns and communications · Other |
+| Message label and hint | "Tell us about the opportunity" / "Your business, the idea or challenge, and what you'd like to achieve." |
+| Privacy line | "We'll only use these details to reply to your enquiry. See our privacy notice." |
+| Confirmation | "Thank you, {first name}. Your enquiry has reached us. We'll review it and be in touch to arrange a conversation about the opportunity." No response time is promised; Nic can add one (e.g. "within two working days"). |
+| Beside the form | "Prefer email?" with his address, and "What happens next: We read every enquiry and reply to arrange a conversation about the opportunity." |
+| Privacy page, enquiries section *(draft)* | See `/privacy`. Needs Nic's sign-off with the rest of that page in step 8. |

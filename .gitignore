@@ -8,3 +8,4 @@ output/playwright/
 .env.*
 .wrangler/
 !.env.labs
+.dev.vars

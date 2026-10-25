@@ -136,6 +136,35 @@
   .btn-ghost { border: 1px solid var(--color-rule); color: var(--color-deep); }
   .btn-ghost:hover { border-color: var(--color-current); background: #fff; }
 
+  /* Form fields (contact form) */
+  .field-input {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid #c9d1d3;
+    border-radius: 0.75rem;
+    background: #fff;
+    color: var(--color-midnight);
+    font: inherit;
+    transition: border-color 200ms var(--ease-water), box-shadow 200ms var(--ease-water);
+  }
+  textarea.field-input { resize: vertical; min-height: 9rem; }
+  select.field-input {
+    appearance: none;
+    padding-right: 2.75rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%2303466e' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+  }
+  .field-input:hover { border-color: var(--color-current); }
+  .field-input:focus-visible {
+    outline: none;
+    border-color: var(--color-deep);
+    box-shadow: 0 0 0 3px rgb(74 149 207 / 0.35);
+  }
+  .field-input.is-invalid { border-color: #b3261e; }
+  .field-input.is-invalid:focus-visible { box-shadow: 0 0 0 3px rgb(179 38 30 / 0.25); }
+
   .link-arrow {
     display: inline-flex;
     align-items: center;

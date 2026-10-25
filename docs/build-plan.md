@@ -42,13 +42,19 @@ Status key: ✅ done · 🔄 in progress · ⬜ not started · ⏸ blocked on Ni
 
 **Done when:** every offer has its own page, and every page leads to an enquiry.
 
-## 4. Contact + lead pipeline ⬜
+## 4. Contact + lead pipeline 🔄
 
-- ⬜ Contact form as a React island with the brief's fields; area of interest pre-filled from `?interest=`
-- ⬜ Cloudflare Pages Function: validation, Turnstile, honeypot, rate limit
-- ⬜ Google Apps Script on Nic's account: append a row to the "Leads" sheet and email the notification
-- ⬜ Confirmation message from the brief, plus accessible error messages
-- ⬜ Privacy notice and consent wording on the form
+Setup and behaviour: [enquiries.md](enquiries.md).
+
+- ✅ Contact form as a React island; area of interest pre-filled from `?interest=`, offer and UTM tags carried through
+- ✅ Cloudflare Pages Function: validation, Turnstile, honeypot, rate limit (`functions/api/enquiry.ts`)
+- ✅ Google Apps Script: appends a row to the "Leads" sheet and emails the notification (`apps-script/Code.gs`)
+- ✅ Confirmation message (draft, in [copy-edits.md](copy-edits.md)) and accessible error messages
+- ✅ Privacy line on the form; enquiry section drafted on `/privacy`
+- ⬜ Connect the repo to Cloudflare Pages (the Function doesn't run on Render) — **Javed**
+- ⬜ Turnstile widget + Pages variables ([enquiries.md](enquiries.md#setup-on-cloudflare)) — **Javed**
+- ⏸ Leads sheet + Apps Script deployed on Nic's Google account ([enquiries.md](enquiries.md#setup-on-nics-google-account-one-time-15-minutes))
+- ⏸ Form fields and confirmation wording signed off
 - ⏸ Does Nic use a CRM? (if so, send leads there instead)
 
 **Done when:** a test enquiry from a phone arrives in Nic's inbox and in the sheet.

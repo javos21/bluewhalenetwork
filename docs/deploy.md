@@ -17,6 +17,11 @@ Every push to `astro-rebuild` redeploys automatically. The URL looks like
 `https://bluewhalenetwork.onrender.com`. It isn't password protected, but it
 isn't indexed either, so share it only with Nic.
 
+**The contact form doesn't send on Render.** Render serves static files only,
+so `/api/enquiry` (a Cloudflare Pages Function) doesn't exist there and the
+form shows its error message with Nic's email. Use a Cloudflare Pages preview
+to test enquiries.
+
 # Deploying to Cloudflare Pages
 
 ## One-time setup
@@ -35,6 +40,9 @@ isn't indexed either, so share it only with Nic.
    | `NODE_VERSION` | `22.22.0` | `22.22.0` |
    | `PUBLIC_SITE_ENV` | `production` | *(unset)* |
    | `PUBLIC_SHOW_LABS` | *(unset)* | `true` |
+
+   Plus the four contact-form variables in
+   [enquiries.md](enquiries.md#setup-on-cloudflare).
 
 After setup, every push to any branch gets its own `https://<branch>.<project>.pages.dev`
 link to share with Nic. Preview links are `noindex` and include `/labs`.

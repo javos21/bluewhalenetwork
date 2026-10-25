@@ -7,6 +7,9 @@ export const site = {
   description:
     'Blue Whale identifies opportunities, develops commercial strategies and helps businesses bring ideas to market.',
   url: 'https://bluewhalenetwork.com',
+  // From Nic's answers (21 Oct 2026). Shown on the contact page and as the
+  // fallback if the enquiry form can't be sent.
+  email: 'bluewhaleconsultingservices@gmail.com',
 };
 
 export const primaryCta = { label: 'Discuss an Opportunity', href: '/contact' };

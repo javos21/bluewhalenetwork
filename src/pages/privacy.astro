@@ -2,9 +2,37 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageIntro from '@/components/sections/PageIntro.astro';
 import InProgress from '@/components/sections/InProgress.astro';
+import { site } from '@/data/site';
 ---
 
 <BaseLayout title="Privacy" description="How Blue Whale Consulting handles information submitted through this website.">
   <PageIntro lines={['Privacy.']} lede="How we collect, use and protect the information you share with us." />
-  <InProgress step="step 8 (needs Nic's sign-off)" />
+
+  <!-- Draft for Nic's sign-off (docs/copy-edits.md). The full page lands in step 8. -->
+  <section class="container-site py-16 sm:py-20">
+    <div class="max-w-2xl">
+      <h2 class="heading text-2xl">Enquiries</h2>
+      <div class="mt-5 grid gap-4 text-midnight/85">
+        <p>
+          When you send an enquiry through our contact form, we receive your name, email address, the area you’re
+          interested in and your message, plus your phone number and organisation if you give them. We also record which
+          page or campaign link brought you to the form, and your country as reported by our hosting provider.
+        </p>
+        <p>
+          We use these details only to reply to your enquiry and to keep a record of the conversation. They are stored in
+          a private Google spreadsheet and sent to us by email. We don’t sell them or use them for marketing lists.
+        </p>
+        <p>
+          The form is protected by Cloudflare Turnstile, which checks that a person, not an automated program, is sending
+          it.
+        </p>
+        <p>
+          To see, correct or delete what we hold about you, email
+          <a class="text-deep underline" href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <InProgress step="step 8 (analytics and the rest of this page, with Nic's sign-off)" />
 </BaseLayout>
