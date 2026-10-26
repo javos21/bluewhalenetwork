@@ -5,7 +5,9 @@
 // - [data-scroll-fill]   words fill in as the paragraph scrolls through view
 // - [data-parallax="n"]  drifts at n × scroll speed relative to its section
 // - [data-progress]      exposes --progress (0–1) as its section passes the
-//                        middle of the viewport, and marks steps as passed
+//                        middle of the viewport, marks steps as passed when
+//                        [data-progress-head] reaches their [data-step-dot],
+//                        marks the furthest one active and fires `bw:step`
 //
 // `.js-motion` on <html> arms the hidden start states in CSS. Reduced-motion
 // visitors get the final state immediately.
@@ -110,9 +112,25 @@ function armScrollEffects() {
       const r = el.getBoundingClientRect();
       const p = Math.min(1, Math.max(0, (vh * 0.65 - r.top) / (r.height || 1)));
       el.style.setProperty('--progress', p.toFixed(3));
-      el.querySelectorAll<HTMLElement>('[data-step]').forEach((step) => {
-        step.classList.toggle('is-passed', p >= Number(step.dataset.step));
+      // A step is passed once the head of the fill (the whale's nose on
+      // desktop) reaches its dot; the furthest passed step is the active one.
+      const head = el.querySelector<HTMLElement>('[data-progress-head]')?.getBoundingClientRect();
+      if (!head) continue;
+      const across = head.width > head.height;
+      const steps = [...el.querySelectorAll<HTMLElement>('[data-step]')];
+      let active = -1;
+      steps.forEach((step, i) => {
+        const dot = (step.querySelector('[data-step-dot]') ?? step).getBoundingClientRect();
+        const passed = across ? head.right >= dot.left + dot.width / 2 : head.bottom >= dot.top + dot.height / 2;
+        step.classList.toggle('is-passed', passed);
+        if (passed) active = i;
       });
+      steps.forEach((step, i) => step.classList.toggle('is-active', i === active));
+      if (String(active) !== el.dataset.active) {
+        const forward = active > Number(el.dataset.active ?? -1);
+        el.dataset.active = String(active);
+        if (active > -1) window.dispatchEvent(new CustomEvent('bw:step', { detail: { index: active, forward } }));
+      }
     }
   };
   const onScroll = () => {

@@ -1,14 +1,14 @@
 ---
-// Our Approach — four steps on a track in deep water. The whale swims
-// along a lane above the track as the section scrolls: its resting point
-// is driven by --progress (motion.ts), and each step lights up as the
-// whale passes it.
+// Our Approach — four steps on a track in deep water. On desktop the whale
+// is the progress marker: shrunk to about half size, it rides just above
+// the line with its nose at the head of the aqua fill (its wake), driven
+// by --progress (motion.ts). A step lights up as the nose passes its dot,
+// and the current step's word swells gently. On phones the steps run
+// vertically, so the whale rests small beside the heading instead.
 import RevealHeading from '@/components/motion/RevealHeading.astro';
 import Whale from '@/components/ocean/Whale.astro';
 import WaveEdge from '@/components/ocean/WaveEdge.astro';
 import { approach } from '@/data/home';
-
-const thresholds = [0.06, 0.32, 0.58, 0.84];
 ---
 
 <section class="depth tone-deep on-dark has-edge" data-depth data-tone="deep" aria-labelledby="approach-heading">
@@ -24,14 +24,14 @@ const thresholds = [0.06, 0.32, 0.58, 0.84];
 
       <div class="relative">
         <div class="pointer-events-none absolute left-[1.05rem] top-0 h-full w-px border-l border-dashed border-white/25 lg:left-0 lg:top-[1.05rem] lg:h-px lg:w-full lg:border-t lg:border-l-0" aria-hidden="true"></div>
-        <div class="track-fill pointer-events-none absolute left-[1.05rem] top-0 w-0.5 bg-aqua lg:left-0 lg:top-[1rem] lg:h-0.5" aria-hidden="true"></div>
+        <div data-progress-head class="track-fill pointer-events-none absolute left-[1.05rem] top-0 w-0.5 bg-aqua lg:left-0 lg:top-[1rem] lg:h-0.5" aria-hidden="true"></div>
 
         <ol class="relative grid gap-12 lg:grid-cols-4 lg:gap-8">
           {approach.steps.map((step, i) => (
-            <li class="step relative pl-14 lg:pl-0 lg:pt-14" data-step={thresholds[i]}>
-              <span class="step-dot absolute left-0 top-0 grid size-[2.1rem] place-items-center rounded-full border-2 border-white/25 bg-deep text-sm font-semibold tabular-nums text-white/60 transition-all duration-500" aria-hidden="true">{i + 1}</span>
-              <h3 class="display text-[clamp(1.8rem,1.4rem+1.2vw,2.5rem)] text-white/35 transition-colors duration-500">{step.word}.</h3>
-              <p class="mt-3 max-w-xs text-white/70">{step.body}</p>
+            <li class="step relative pl-14 lg:pl-0 lg:pt-14" data-step>
+              <span data-step-dot class="step-dot absolute left-0 top-0 grid size-[2.1rem] place-items-center rounded-full border-2 border-white/25 bg-deep text-sm font-semibold tabular-nums text-white/60 transition-all duration-500" aria-hidden="true">{i + 1}</span>
+              <h3 class="step-word display text-[clamp(1.8rem,1.4rem+1.2vw,2.5rem)] text-white/35">{step.word}.</h3>
+              <p class="step-body mt-3 max-w-xs text-white/70">{step.body}</p>
             </li>
           ))}
         </ol>
@@ -43,9 +43,15 @@ const thresholds = [0.06, 0.32, 0.58, 0.84];
 </section>
 
 <style>
+  /* Mobile: the fill grows down the vertical line. Desktop: its head is the
+     whale's nose (--aw and --nose are set on .approach in global.css). */
   .track-fill { height: calc(var(--progress, 1) * 100%); }
   @media (min-width: 64rem) {
-    .track-fill { height: 2px; width: calc(var(--progress, 1) * 100%); }
+    .track-fill {
+      height: 2px;
+      width: calc(var(--progress, 1) * (100% - var(--aw)) + var(--aw) * var(--nose));
+      max-width: 100%;
+    }
   }
   :global(html:not(.js-motion)) .step h3,
   .step:global(.is-passed) h3 { color: #fff; }
@@ -55,5 +61,32 @@ const thresholds = [0.06, 0.32, 0.58, 0.84];
     background: var(--color-aqua);
     color: var(--color-midnight);
     box-shadow: 0 0 0 6px rgb(119 207 241 / 0.22);
+  }
+
+  /* The current step's word swells a little with a soft, fluid wobble,
+     and settles back down when the whale moves on. */
+  .step-word {
+    width: fit-content;
+    transform-origin: 0% 85%;
+    transition:
+      color 500ms var(--ease-water),
+      transform 600ms var(--ease-water);
+  }
+  .step-body { transition: color 500ms var(--ease-water); }
+  .step:global(.is-active) .step-word {
+    transform: scale(1.08);
+    animation: step-swell 900ms ease-in-out backwards;
+  }
+  .step:global(.is-active) .step-body { color: rgb(255 255 255 / 0.9); }
+  @keyframes step-swell {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.12, 1.06); }
+    55% { transform: scale(1.06, 1.11); }
+    78% { transform: scale(1.095, 1.07); }
+    100% { transform: scale(1.08); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .step-word { transition: none; }
+    .step:global(.is-active) .step-word { animation: none; }
   }
 </style>

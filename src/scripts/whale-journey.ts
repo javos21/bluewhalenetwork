@@ -53,6 +53,8 @@ type Stop = {
   tone: WhaleTone;
   restFacing: number;
   swim: boolean;
+  /** The Approach track: leaving it always swims off the end of the lane */
+  track: boolean;
   spout: boolean;
 };
 
@@ -90,6 +92,57 @@ function start() {
     },
   );
   teardown = () => mm.revert();
+}
+
+type Spot = { x: number; y: number; scale: number; offscreen: boolean };
+
+/**
+ * Crossings onto and off the Approach track, routed round the copy.
+ * Onto it (desktop): down the open right-hand side first, then left along
+ * the gap between the heading and the line, shrinking as it comes, and a
+ * turn to face along the track. Off it (desktop and phones): carry on off
+ * the end of the lane, then swim into the next section from that side,
+ * growing back to full size; on phones this keeps it out of the steps.
+ */
+function trackCrossing(t: number, from: Spot, to: Spot, dest: Stop, w: number, vw: number, mobile: boolean) {
+  if (dest.swim) {
+    const start = from.offscreen ? { ...from, x: vw + w * 0.6, y: to.y - w * 0.3 } : from;
+    const down = smoothstep(clamp01(t / 0.45));
+    const along = smoothstep(clamp01((t - 0.35) / 0.65));
+    const turn = smoothstep(clamp01((t - 0.86) / 0.14));
+    const heading = to.x < start.x ? 180 : 0;
+    return {
+      x: lerp(start.x, to.x, along),
+      y: lerp(start.y, to.y, down),
+      scale: lerp(start.scale, to.scale, smoothstep(clamp01(t / 0.6))),
+      facingDeg: lerp(heading, dest.restFacing, turn),
+      pitchDeg: Math.sin(clamp01(t / 0.45) * Math.PI) * 26,
+      propulsion: 0.8,
+    };
+  }
+  if (t < 0.5) {
+    const u = t / 0.5;
+    return {
+      x: lerp(from.x, vw + w * 0.7, u * u),
+      y: from.y,
+      scale: from.scale,
+      facingDeg: 0,
+      pitchDeg: 0,
+      propulsion: 0.85,
+    };
+  }
+  const u = (t - 0.5) / 0.5;
+  const fromRight = to.x > vw / 2;
+  const enterX = fromRight ? vw + w * 0.6 : -w * 0.6;
+  const pose = whaleChoreography(u, fromRight ? 180 : 0, mobile, dest.restFacing);
+  return {
+    x: lerp(enterX, to.x, pose.horizontal),
+    y: lerp(to.y - 40, to.y, u) + pose.dip,
+    scale: lerp(to.scale * 0.75, to.scale, smoothstep(u)),
+    facingDeg: pose.facing,
+    pitchDeg: pose.pitch,
+    propulsion: pose.propulsion,
+  };
 }
 
 function runJourney(world: HTMLElement, mobile: boolean) {
@@ -303,7 +356,9 @@ function runJourney(world: HTMLElement, mobile: boolean) {
       section,
       tone: DARK_WATER.has(section.dataset.tone ?? '') ? 'light' : 'dark',
       restFacing: face === 'right' ? 0 : face === 'left' ? 180 : side === 'right' ? 180 : 0,
-      swim: 'swim' in el.dataset,
+      // The Approach track is only ridden on desktop; on phones it is a plain resting point.
+      swim: 'swim' in el.dataset && !mobile,
+      track: 'swim' in el.dataset,
       spout: 'spout' in el.dataset,
     };
   });
@@ -416,7 +471,14 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     const current = stops[at];
     const crossing = next > -1 && t > 0;
 
-    if (crossing) {
+    if (crossing && (stops[next].swim || current.track)) {
+      // On and off the Approach track, routed round the copy.
+      const pose = trackCrossing(t, point(current), point(stops[next]), stops[next], w, vw, mobile);
+      ({ x, y, scale, facingDeg, pitchDeg, propulsion } = pose);
+      tone = t > (current.track ? 0.5 : 0.3) ? stops[next].tone : current.tone;
+      restFacingNow = stops[next].restFacing;
+      motion = 'cross';
+    } else if (crossing) {
       const to = point(stops[next]);
       let from = point(current);
       if (from.offscreen) {
@@ -490,6 +552,12 @@ function runJourney(world: HTMLElement, mobile: boolean) {
   let idleClock = 0;
   let nextFlick = 3 + Math.random() * 3;
   let flickAt = -10;
+  // A tail flick as the whale passes each step on the track.
+  let nudgeAt = -10;
+  const onStep = (e: Event) => {
+    if (motion === 'swim' && (e as CustomEvent<{ forward: boolean }>).detail.forward) nudgeAt = idleClock;
+  };
+  window.addEventListener('bw:step', onStep);
   let nextIdleBubble = 2 + Math.random() * 2;
 
   const swim = (_time: number, deltaMs: number) => {
@@ -536,6 +604,8 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     } else if (rest < 0.5) {
       nextFlick = Math.max(nextFlick, idleClock + 2);
     }
+    const sinceNudge = idleClock - nudgeAt;
+    if (sinceNudge < 0.7) amp += Math.sin((sinceNudge / 0.7) * Math.PI * 2) * 16 * (1 - sinceNudge / 0.7);
     const sinceFlick = idleClock - flickAt;
     if (sinceFlick < 1.1) amp += Math.sin((sinceFlick / 1.1) * Math.PI * 2) * 11 * (1 - sinceFlick / 1.1) * rest;
 
@@ -565,10 +635,12 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     const unit = (W() * Number(gsap.getProperty(traveler, 'scale'))) / ARTWORK_W; // px per artwork unit
     wake.tone(traveler.dataset.whaleTone === 'light' ? 'light' : 'dark');
 
-    if (recording) {
+    if (recording && motion !== 'swim') {
       const mid = centre(wakeMark);
       // The tail beat ripples the wake into a gentle S rather than a straight bar.
       wake.record(now, mid.x, mid.y + amp * unit * 0.35, 48 * unit * (0.55 + 0.45 * soft), 110 * unit, 650 * unit);
+    }
+    if (recording) {
       // A bubble off the fluke on each half beat, two when swimming hard.
       const halfBeat = Math.floor(phase * 2);
       if (halfBeat !== lastHalfBeat) {
@@ -600,6 +672,7 @@ function runJourney(world: HTMLElement, mobile: boolean) {
 
   return () => {
     gsap.ticker.remove(swim);
+    window.removeEventListener('bw:step', onStep);
     observer.disconnect();
     document.removeEventListener('visibilitychange', syncCurrents);
     if (following) world.prepend(traveler);

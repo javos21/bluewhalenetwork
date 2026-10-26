@@ -504,15 +504,31 @@
 .wave-edge svg.is-reverse { animation-direction: reverse; animation-duration: 32s; }
 @keyframes wave-drift { to { transform: translateX(-50%); } }
 
-/* Approach lane: the resting point follows the section's scroll progress */
-.approach-lane { position: relative; height: clamp(6rem, 11vw, 9.5rem); margin-bottom: 1.5rem; }
-.approach-anchor {
-  --aw: min(13.5rem, 42vw);
+/* Approach lane. Phones: the whale rests small at the end of the lane,
+   under the heading. Desktop: it is the progress marker, riding just above
+   the line with its nose (--nose of its width, from the artwork) at the
+   head of the fill, which follows --progress. */
+.approach { --aw: min(8rem, 30vw); --nose: 0.867; }
+.approach-lane { position: relative; height: 4.75rem; margin-bottom: 1.5rem; }
+/* .approach-lane prefix: outranks the sticky resting point (.depth .whale-anchor) */
+.approach-lane .approach-anchor {
   position: absolute;
-  top: 0;
-  left: calc(var(--progress, 1) * (100% - var(--aw)));
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: auto;
   width: var(--aw);
+  max-width: none;
+  margin: 0;
   aspect-ratio: 450 / 270;
+}
+@media (min-width: 64rem) {
+  .approach-lane { height: 3.5rem; }
+  .approach-lane .approach-anchor {
+    right: auto;
+    bottom: -1.45rem;
+    left: calc(var(--progress, 1) * (100% - var(--aw)));
+  }
 }
 
 /* Offer cards */
