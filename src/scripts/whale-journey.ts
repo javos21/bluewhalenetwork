@@ -18,6 +18,15 @@
 // After the dive the whale is positioned in document space inside
 // [data-journey], so on phones it scrolls natively with the content.
 //
+// Fast scrolling: the whale chases the scroll position at a capped speed,
+// so every crossing takes at least MIN_CROSSING_MS and a hard flick never
+// makes it jump. It is never more than one crossing behind, and the dive
+// always plays through before the journey takes over.
+//
+// Life in the water: a tapered wake and bubbles follow it while it
+// swims (whaleWake.ts), the tail beats faster the harder it swims, and at
+// rest it bobs gently with the odd tail flick and bubble.
+//
 // Reduced motion and no-JS visitors get still whales in every resting
 // point instead (.whale-static). Everything is torn down before Astro
 // swaps pages.
@@ -26,8 +35,16 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { whaleChoreography } from '@/lib/whaleChoreography';
+import { createWhaleWake } from '@/lib/whaleWake';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+// Shortest time a crossing between sections can take, however fast the
+// page is scrolled. Slow scrolling still moves the whale almost directly.
+const MIN_CROSSING_MS = { desktop: 850, mobile: 700 };
+// Width of the whale artwork (Whale.astro viewBox), to size the wake and
+// bubbles to the whale on screen.
+const ARTWORK_W = 450;
 
 type WhaleTone = 'light' | 'dark';
 type Stop = {
@@ -42,6 +59,7 @@ type Stop = {
 const DARK_WATER = new Set(['deep', 'midnight']);
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const smoothstep = (v: number) => v * v * (3 - 2 * v);
 
 let teardown: (() => void) | null = null;
 
@@ -101,6 +119,12 @@ function runJourney(world: HTMLElement, mobile: boolean) {
   // script lags and slides over the content. In document space it scrolls
   // natively with whatever it rests beside.
   const journeyEl = world.closest<HTMLElement>('[data-journey]') ?? document.body;
+  const wakeMark = q<SVGCircleElement>('[data-whale-wake]', traveler);
+  const tailMark = q<SVGCircleElement>('[data-whale-tail]', traveler);
+  const blowhole = q<SVGCircleElement>('[data-whale-blowhole]', traveler);
+  const tailRestY = Number(tailMark.getAttribute('cy'));
+  const wake = createWhaleWake();
+  wake.host(traveler);
 
   root.classList.add('whale-live');
   world.classList.add('is-scroll-scene');
@@ -162,7 +186,8 @@ function runJourney(world: HTMLElement, mobile: boolean) {
       pin: true,
       start: () => `top top+=${headerH()}`,
       end: () => `+=${window.innerHeight * (mobile ? 1.8 : 2.6)}`,
-      scrub: 0.8,
+      // A little more lag than a plain scrub, so a fast flick still shows the dive.
+      scrub: 1.1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
       refreshPriority: 10,
@@ -294,17 +319,24 @@ function runJourney(world: HTMLElement, mobile: boolean) {
   let spouted = false;
 
   let following = false;
-  let swimClock = 0;
   let tailIsResting = true;
   let swimStrength = 0;
   let previousScroll = window.scrollY;
   let travelDir = 1;
   let restFacingNow = 0;
+  // Where the whale is along the stops (index + crossing progress), which
+  // chases where the scroll says it should be. See MIN_CROSSING_MS.
+  let shown = 0;
+  let shownVel = 0; // stops per ms
+  let motion: 'rest' | 'cross' | 'swim' = 'rest';
+  let atSurface = false;
+  const maxVel = 1 / MIN_CROSSING_MS[mobile ? 'mobile' : 'desktop'];
 
   const restoreHeroWhale = () => {
     if (!following) return;
     following = false;
     world.prepend(traveler);
+    wake.host(traveler);
     traveler.classList.remove('is-following');
     const s = startPoint();
     const end = landing();
@@ -313,11 +345,16 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     gsap.set(pitch, { rotation: 0 });
     gsap.set(trails, { opacity: 0 });
     traveler.dataset.whaleTone = 'light';
+    shown = 0;
+    shownVel = 0;
+    motion = 'rest';
   };
 
   const followSections = (deltaMs: number) => {
     const trigger = journey.scrollTrigger!;
-    if (window.scrollY < trigger.end) {
+    // Stay with the dive until its scrubbed timeline has caught up, so a
+    // fast flick past the pinned scene still plays the dive through.
+    if (window.scrollY < trigger.end || (!following && journey.progress() < 0.999)) {
       restoreHeroWhale();
       return false;
     }
@@ -327,9 +364,14 @@ function runJourney(world: HTMLElement, mobile: boolean) {
       following = true;
       trigger.getTween()?.progress(1);
       journeyEl.append(traveler);
+      wake.host(traveler);
       traveler.classList.add('is-following');
       gsap.set(traveler, { left: 0, top: 0 });
+      // The section wake replaces the dive's speed lines.
+      gsap.set(trails, { opacity: 0 });
       restFacingNow = 180;
+      shown = 0;
+      shownVel = 0;
     }
 
     const vh = window.innerHeight;
@@ -337,15 +379,33 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     const scrollDelta = window.scrollY - previousScroll;
     if (Math.abs(scrollDelta) > 0.5) travelDir = Math.sign(scrollDelta);
 
-    // Which stop are we at, and are we crossing to the next one?
+    // Where the scroll says the whale should be: stop index + crossing progress.
     const arrive = (i: number) => clamp01((vh * 0.92 - stops[i].section.getBoundingClientRect().top) / (vh * 0.55));
-    let at = 0;
+    let target = 0;
     for (let i = 1; i < stops.length; i++) {
-      if (arrive(i) >= 1) at = i;
-      else break;
+      const a = arrive(i);
+      if (a >= 1) target = i;
+      else {
+        target += a;
+        break;
+      }
     }
+
+    // Where it is: it chases that at a capped speed (ease in from rest,
+    // ease out on arrival) and is never more than one crossing behind.
+    shown = Math.max(target - 1, Math.min(target + 1, shown));
+    const gap = target - shown;
+    const wantVel = Math.max(-maxVel, Math.min(maxVel, gap / 140));
+    shownVel += (wantVel - shownVel) * Math.min(1, deltaMs / 90);
+    shown += shownVel * deltaMs;
+    if (gap === 0 || Math.sign(target - shown) !== Math.sign(gap) || Math.abs(target - shown) < 1e-4) {
+      shown = target;
+      shownVel = 0;
+    }
+
+    const at = Math.min(stops.length - 1, Math.floor(shown + 1e-6));
     const next = at + 1 < stops.length ? at + 1 : -1;
-    const t = next > -1 ? arrive(next) : 0;
+    const t = next > -1 ? clamp01(shown - at) : 0;
 
     const point = (s: Stop) => {
       const r = s.el.getBoundingClientRect();
@@ -354,8 +414,9 @@ function runJourney(world: HTMLElement, mobile: boolean) {
 
     let x: number, y: number, scale: number, facingDeg: number, pitchDeg: number, tone: WhaleTone, propulsion: number;
     const current = stops[at];
+    const crossing = next > -1 && t > 0;
 
-    if (next > -1 && t > 0) {
+    if (crossing) {
       const to = point(stops[next]);
       let from = point(current);
       if (from.offscreen) {
@@ -373,6 +434,7 @@ function runJourney(world: HTMLElement, mobile: boolean) {
       tone = t > 0.65 ? stops[next].tone : current.tone;
       propulsion = pose.propulsion;
       restFacingNow = stops[next].restFacing;
+      motion = 'cross';
     } else {
       const p = point(current);
       x = p.x;
@@ -385,19 +447,21 @@ function runJourney(world: HTMLElement, mobile: boolean) {
         const target = travelDir < 0 ? 180 : 0;
         restFacingNow += (target - restFacingNow) * 0.12;
         propulsion = 0.75;
+        motion = 'swim';
       } else {
         restFacingNow += (current.restFacing - restFacingNow) * 0.2;
         propulsion = 0;
+        motion = 'rest';
       }
       facingDeg = restFacingNow;
     }
 
     // Spout once on reaching the surface; reset when it leaves.
-    const atSpout = current.spout && !(next > -1 && t > 0);
-    if (atSpout && !spouted) {
+    atSurface = current.spout && !crossing;
+    if (atSurface && !spouted) {
       spouted = true;
       spoutMotion.restart();
-    } else if (!atSpout && spouted && !current.spout) {
+    } else if (!atSurface && spouted && !current.spout) {
       spouted = false;
       spoutMotion.pause(0);
       gsap.set(spout, { opacity: 0 });
@@ -411,35 +475,116 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     gsap.set(pitch, { rotation: pitchDeg });
     traveler.dataset.whaleTone = tone;
 
-    const activity = Math.min(1, Math.abs(scrollDelta) / 8);
-    swimStrength += (activity * propulsion - swimStrength) * Math.min(1, deltaMs / 120);
-    gsap.set(trails, { opacity: swimStrength * 0.5 });
+    // Crossings swim with the whale's own speed (it keeps swimming after
+    // the scroll stops); the Approach track swims with the scroll.
+    const activity = crossing ? Math.max(0.35, Math.abs(shownVel) / maxVel) : Math.min(1, Math.abs(scrollDelta) / 8);
+    swimStrength += (Math.min(1, activity) * propulsion - swimStrength) * Math.min(1, deltaMs / 120);
     return true;
   };
 
+  // Tail beat, idle life and the wake.
+  let phase = 0; // tail-beat phase, in beats
+  let lastHalfBeat = 0;
+  let rest = 1; // 0 swimming … 1 at rest
+  let idleClock = 0;
+  let nextFlick = 3 + Math.random() * 3;
+  let flickAt = -10;
+  let nextIdleBubble = 2 + Math.random() * 2;
+
   const swim = (_time: number, deltaMs: number) => {
     if (document.hidden) return;
-    const inSections = followSections(deltaMs);
+    const dtMs = Math.min(deltaMs, 64);
+    const dt = dtMs / 1000;
+    const now = performance.now();
+    const inSections = followSections(dtMs);
     previousScroll = window.scrollY;
     if (!inSections) syncSplash();
+
     const travel = (journey.time() - 0.28) / 0.92;
-    if (!inSections && (travel <= 0 || travel >= 1)) {
-      if (!tailIsResting) body.setAttribute('d', restingOutline);
-      tailIsResting = true;
-      swimClock = 0;
-      return;
+    const diving = !inSections && travel > 0 && travel < 1;
+    const underwater = inSections ? !atSurface : travel >= 1 || (diving && contactTime !== null);
+
+    // How hard it is swimming, 0–1.
+    const strength = inSections
+      ? Math.min(1, swimStrength * 1.6)
+      : diving
+        ? Math.min(1, travel / 0.12, (1 - travel) / 0.15)
+        : 0;
+    const soft = smoothstep(clamp01(strength));
+
+    // Idle life: a slow bob while it rests (after the entrance has played).
+    const resting = inSections ? motion === 'rest' || (motion === 'swim' && swimStrength < 0.05) : !diving;
+    rest += ((resting ? 1 : 0) - rest) * Math.min(1, dt / 0.6);
+    idleClock += dt;
+    if (entrance.progress() === 1) {
+      gsap.set(enter, {
+        y: Math.sin((idleClock * Math.PI * 2) / 4.6) * 6 * rest,
+        rotation: Math.sin((idleClock * Math.PI * 2) / 6.2 + 1) * 1.6 * rest,
+      });
     }
-    if (inSections && swimStrength < 0.01) {
-      if (!tailIsResting) body.setAttribute('d', restingOutline);
-      tailIsResting = true;
-      return;
+
+    // Tail: beats faster the harder it swims, plus a lone flick now and then at rest.
+    let amp = 0;
+    if (soft > 0.01) {
+      phase += dt / lerp(1.8, 0.95, soft);
+      amp = Math.sin(phase * Math.PI * 2) * 24 * soft;
     }
-    swimClock += Math.min(deltaMs, 64) / 1000;
-    const envelope = inSections ? Math.min(1, swimStrength * 1.6) : Math.min(1, travel / 0.12, (1 - travel) / 0.15);
-    const soft = envelope * envelope * (3 - 2 * envelope);
-    body.setAttribute('d', tailStroke(Math.sin((swimClock * Math.PI * 2) / 1.8) * 24 * soft));
-    trailPaths.forEach((path, i) => path.setAttribute('stroke-dashoffset', `${swimClock * 65 + i * 34}`));
-    tailIsResting = false;
+    if (rest > 0.9 && idleClock > nextFlick) {
+      flickAt = idleClock;
+      nextFlick = idleClock + 4 + Math.random() * 4;
+    } else if (rest < 0.5) {
+      nextFlick = Math.max(nextFlick, idleClock + 2);
+    }
+    const sinceFlick = idleClock - flickAt;
+    if (sinceFlick < 1.1) amp += Math.sin((sinceFlick / 1.1) * Math.PI * 2) * 11 * (1 - sinceFlick / 1.1) * rest;
+
+    if (Math.abs(amp) < 0.2) {
+      if (!tailIsResting) {
+        body.setAttribute('d', restingOutline);
+        tailMark.setAttribute('cy', String(tailRestY));
+      }
+      tailIsResting = true;
+    } else {
+      body.setAttribute('d', tailStroke(amp));
+      tailMark.setAttribute('cy', String(tailRestY + amp));
+      tailIsResting = false;
+    }
+    if (!inSections) trailPaths.forEach((path, i) => path.setAttribute('stroke-dashoffset', `${phase * 117 + i * 34}`));
+
+    // Wake and bubbles, only in the water and only while something shows.
+    const recording = underwater && (inSections ? motion !== 'rest' && soft > 0.12 : diving && travel < 0.97);
+    const idleBubble = underwater && rest > 0.9 && idleClock > nextIdleBubble;
+    if (!recording && !idleBubble && !wake.busy) return;
+
+    const parent = traveler.parentElement!.getBoundingClientRect();
+    const centre = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - parent.left, y: r.top + r.height / 2 - parent.top };
+    };
+    const unit = (W() * Number(gsap.getProperty(traveler, 'scale'))) / ARTWORK_W; // px per artwork unit
+    wake.tone(traveler.dataset.whaleTone === 'light' ? 'light' : 'dark');
+
+    if (recording) {
+      const mid = centre(wakeMark);
+      // The tail beat ripples the wake into a gentle S rather than a straight bar.
+      wake.record(now, mid.x, mid.y + amp * unit * 0.35, 48 * unit * (0.55 + 0.45 * soft), 110 * unit, 650 * unit);
+      // A bubble off the fluke on each half beat, two when swimming hard.
+      const halfBeat = Math.floor(phase * 2);
+      if (halfBeat !== lastHalfBeat) {
+        lastHalfBeat = halfBeat;
+        if (soft > 0.25) {
+          const tail = centre(tailMark);
+          wake.bubble(now, tail.x, tail.y, 4 * unit);
+          if (Math.random() < soft * 0.6) wake.bubble(now, tail.x, tail.y, 3 * unit);
+        }
+      }
+    }
+    if (idleBubble) {
+      nextIdleBubble = idleClock + 3 + Math.random() * 4;
+      const hole = centre(blowhole);
+      wake.bubble(now, hole.x, hole.y, 3.2 * unit);
+    }
+    wake.draw(now);
   };
   gsap.ticker.add(swim);
 
@@ -459,7 +604,9 @@ function runJourney(world: HTMLElement, mobile: boolean) {
     if (following) world.prepend(traveler);
     traveler.classList.remove('is-following');
     body.setAttribute('d', restingOutline);
-    gsap.set([traveler, facing, pitch, trails, spout, splash], { clearProps: 'all' });
+    tailMark.setAttribute('cy', String(tailRestY));
+    wake.destroy();
+    gsap.set([traveler, enter, facing, pitch, trails, spout, splash], { clearProps: 'all' });
     gsap.set(spout, { opacity: 0 });
     root.classList.remove('whale-live');
     world.classList.remove('is-scroll-scene');

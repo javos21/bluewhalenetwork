@@ -36,4 +36,13 @@ const { class: className = '', live = false } = Astro.props;
   {markPaths.bands.map((band) => (
     <path d={band.d} class={band.tone === 'aqua' ? 'whale-band-light' : 'whale-band'} />
   ))}
+  {live && (
+    <>
+      {/* Invisible markers the journey reads: the wake starts mid-body (hidden under the
+          whale, and steady when it turns round), bubbles come off the fluke and blowhole */}
+      <circle cx="245" cy="185" r="1" fill="none" data-whale-wake />
+      <circle cx="40" cy="192" r="1" fill="none" data-whale-tail />
+      <circle cx="357" cy="157" r="1" fill="none" data-whale-blowhole />
+    </>
+  )}
 </svg>

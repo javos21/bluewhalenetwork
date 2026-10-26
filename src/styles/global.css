@@ -366,6 +366,27 @@
   stroke: var(--color-aqua);
 }
 
+/* The wake: a 1px box that draws in its parent's pixel space (whaleWake.ts).
+   Just under the whale; text sits above both. Aqua on dark water, a faint
+   Deep Ocean on light water. */
+.whale-wake {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+  color: var(--color-aqua);
+  --wake-fill: 0.14;
+  --bubble-stroke: 0.9;
+}
+.journey > .whale-wake { z-index: 1; }
+.whale-wake[data-tone='dark'] { color: var(--color-current); --wake-fill: 0.15; --bubble-stroke: 0.7; }
+.whale-wake-ribbon { fill: currentColor; fill-opacity: var(--wake-fill); }
+.whale-wake-bubble { fill: none; stroke: currentColor; stroke-width: 1.3; stroke-opacity: var(--bubble-stroke); }
+
 /* Pinned opening scene */
 .ocean-world { position: relative; overflow: clip; background: var(--color-deep); }
 .ocean-world.is-scroll-scene { height: var(--scene-h); }
