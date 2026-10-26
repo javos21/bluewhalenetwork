@@ -531,6 +531,26 @@
   }
 }
 
+/* Desktop: the Approach section holds while the whale travels the line.
+   Plain CSS sticky: the spacer after it (.approach-hold) is the length of
+   the hold (a sticky element can't travel into its parent's padding), and
+   motion.ts reads progress from the wrapper ([data-progress-pin]). Only
+   with JS motion on a screen tall enough to show the whole section. Keep
+   the media query in sync with PIN_QUERY in motion.ts. */
+.approach-hold { display: none; }
+@media (min-width: 64rem) and (min-height: 40rem) {
+  .js-motion .approach-pin { background: var(--color-deep); }
+  .js-motion .approach-hold { display: block; height: 170vh; }
+  .js-motion .approach-pin > .approach-section {
+    position: sticky;
+    top: var(--header-h);
+    min-height: calc(100vh - var(--header-h));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
 /* Offer cards */
 .offer-card {
   display: flex;

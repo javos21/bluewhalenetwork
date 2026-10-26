@@ -5,13 +5,18 @@
 // by --progress (motion.ts). A step lights up as the nose passes its dot,
 // and the current step's word swells gently. On phones the steps run
 // vertically, so the whale rests small beside the heading instead.
+//
+// On desktop the section holds in place (CSS sticky inside .approach-pin)
+// while the whale travels the line, about half a screen of scrolling per
+// step, then scrolls on. Scroll speed itself is never changed.
 import RevealHeading from '@/components/motion/RevealHeading.astro';
 import Whale from '@/components/ocean/Whale.astro';
 import WaveEdge from '@/components/ocean/WaveEdge.astro';
 import { approach } from '@/data/home';
 ---
 
-<section class="depth tone-deep on-dark has-edge" data-depth data-tone="deep" aria-labelledby="approach-heading">
+<div class="approach-pin" data-progress-pin>
+<section class="depth tone-deep on-dark has-edge approach-section" data-depth data-tone="deep" aria-labelledby="approach-heading">
   <div class="container-site relative z-[2]">
     <RevealHeading id="approach-heading" lines={approach.lines} class="display text-[clamp(2.2rem,1.4rem+2.8vw,3.75rem)]" />
 
@@ -41,6 +46,8 @@ import { approach } from '@/data/home';
   </div>
   <WaveEdge to="midnight" reverse />
 </section>
+<div class="approach-hold" aria-hidden="true"></div>
+</div>
 
 <style>
   /* Mobile: the fill grows down the vertical line. Desktop: its head is the

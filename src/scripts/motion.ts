@@ -13,6 +13,8 @@
 // visitors get the final state immediately.
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// When a [data-progress-pin] wrapper holds its section (global.css, Approach).
+const PIN_QUERY = '(min-width: 64rem) and (min-height: 40rem)';
 
 let observer: IntersectionObserver | undefined;
 let scrollController: AbortController | undefined;
@@ -109,8 +111,7 @@ function armScrollEffects() {
     }
 
     for (const el of tracks) {
-      const r = el.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, (vh * 0.65 - r.top) / (r.height || 1)));
+      const p = trackProgress(el, vh);
       el.style.setProperty('--progress', p.toFixed(3));
       // A step is passed once the head of the fill (the whale's nose on
       // desktop) reaches its dot; the furthest passed step is the active one.
@@ -141,6 +142,26 @@ function armScrollEffects() {
   update();
   window.addEventListener('scroll', onScroll, { passive: true, signal: scrollController.signal });
   window.addEventListener('resize', onScroll, { passive: true, signal: scrollController.signal });
+}
+
+/**
+ * 0–1 along a [data-progress] track. Normally it runs as the track passes
+ * the middle of the viewport. While a [data-progress-pin] wrapper is holding
+ * the section, it runs through the hold instead: the line is travelled over
+ * the first 85%, then it rests on the last step before the section moves on.
+ */
+function trackProgress(el: HTMLElement, vh: number) {
+  const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  const pin = el.closest<HTMLElement>('[data-progress-pin]');
+  const held = pin?.firstElementChild as HTMLElement | null;
+  if (pin && held && window.matchMedia(PIN_QUERY).matches && getComputedStyle(held).position === 'sticky') {
+    const r = pin.getBoundingClientRect();
+    const stickTop = parseFloat(getComputedStyle(held).top) || 0;
+    const hold = r.height - held.offsetHeight;
+    return clamp((stickTop - r.top) / (hold * 0.85 || 1));
+  }
+  const r = el.getBoundingClientRect();
+  return clamp((vh * 0.65 - r.top) / (r.height || 1));
 }
 
 /* ---------- word rotate ([data-rotator]) ---------- */

@@ -98,25 +98,36 @@ type Spot = { x: number; y: number; scale: number; offscreen: boolean };
 
 /**
  * Crossings onto and off the Approach track, routed round the copy.
- * Onto it (desktop): down the open right-hand side first, then left along
- * the gap between the heading and the line, shrinking as it comes, and a
- * turn to face along the track. Off it (desktop and phones): carry on off
- * the end of the lane, then swim into the next section from that side,
- * growing back to full size; on phones this keeps it out of the steps.
+ * Onto it (desktop): turn and swim off the right-hand edge, then come in
+ * from the left along the line to the first step, already at track size,
+ * so it never crosses the heading or doubles back along the track.
+ * Off it (desktop and phones): carry on off the end of the lane, then swim
+ * into the next section from that side, growing back to full size; on
+ * phones this keeps it out of the steps.
  */
-function trackCrossing(t: number, from: Spot, to: Spot, dest: Stop, w: number, vw: number, mobile: boolean) {
+function trackCrossing(t: number, from: Spot, to: Spot, dest: Stop, w: number, vw: number, mobile: boolean, fromFacing: number) {
   if (dest.swim) {
-    const start = from.offscreen ? { ...from, x: vw + w * 0.6, y: to.y - w * 0.3 } : from;
-    const down = smoothstep(clamp01(t / 0.45));
-    const along = smoothstep(clamp01((t - 0.35) / 0.65));
-    const turn = smoothstep(clamp01((t - 0.86) / 0.14));
-    const heading = to.x < start.x ? 180 : 0;
+    // Its last resting place already scrolled away: skip straight to the entry.
+    const exitShare = from.offscreen ? 0 : 0.4;
+    if (t < exitShare) {
+      const u = t / exitShare;
+      return {
+        x: lerp(from.x, vw + w * 0.7, u * u),
+        y: from.y - Math.sin(u * Math.PI) * 12,
+        scale: from.scale,
+        facingDeg: lerp(fromFacing, 0, smoothstep(clamp01(u / 0.3))),
+        pitchDeg: -Math.sin(u * Math.PI) * 8,
+        propulsion: 0.85,
+      };
+    }
+    const u = (t - exitShare) / (1 - exitShare);
+    const glide = 1 - (1 - u) ** 2; // quick in from the edge, easing onto the first step
     return {
-      x: lerp(start.x, to.x, along),
-      y: lerp(start.y, to.y, down),
-      scale: lerp(start.scale, to.scale, smoothstep(clamp01(t / 0.6))),
-      facingDeg: lerp(heading, dest.restFacing, turn),
-      pitchDeg: Math.sin(clamp01(t / 0.45) * Math.PI) * 26,
+      x: lerp(-w * 0.6, to.x, glide),
+      y: to.y,
+      scale: to.scale,
+      facingDeg: 0,
+      pitchDeg: Math.sin(u * Math.PI) * 5,
       propulsion: 0.8,
     };
   }
@@ -473,9 +484,9 @@ function runJourney(world: HTMLElement, mobile: boolean) {
 
     if (crossing && (stops[next].swim || current.track)) {
       // On and off the Approach track, routed round the copy.
-      const pose = trackCrossing(t, point(current), point(stops[next]), stops[next], w, vw, mobile);
+      const pose = trackCrossing(t, point(current), point(stops[next]), stops[next], w, vw, mobile, current.restFacing);
       ({ x, y, scale, facingDeg, pitchDeg, propulsion } = pose);
-      tone = t > (current.track ? 0.5 : 0.3) ? stops[next].tone : current.tone;
+      tone = t > (current.track ? 0.5 : 0.4) ? stops[next].tone : current.tone;
       restFacingNow = stops[next].restFacing;
       motion = 'cross';
     } else if (crossing) {
