@@ -420,8 +420,9 @@ function runJourney(world: HTMLElement, mobile: boolean) {
       const to = point(stops[next]);
       let from = point(current);
       if (from.offscreen) {
-        // Its last resting place has scrolled away: swim in from the far side.
-        const fromRight = to.x < vw / 2;
+        // Its last resting place has scrolled away: swim in from the nearest
+        // edge, on the destination's side, so it never crosses the copy.
+        const fromRight = to.x > vw / 2;
         from = { x: fromRight ? vw + w * 0.6 : -w * 0.6, y: to.y - 40, scale: to.scale, offscreen: false };
       }
       const initial = to.x >= from.x ? 0 : 180;
